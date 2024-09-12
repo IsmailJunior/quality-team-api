@@ -6,7 +6,7 @@ export const createCampaingService = async (dto) => {
 	return { campaing };
 };
 
-export const getAllCampaingsService = async (dto) => {
+export const findCampaingsService = async (dto) => {
 	const features = new APIFeatures(Campaing.find(), dto.query)
 		.filter()
 		.sort()
@@ -19,7 +19,7 @@ export const getAllCampaingsService = async (dto) => {
 	};
 };
 
-export const getCampaingByIdService = async (id) => {
+export const findCampaingByIdService = async (id) => {
 	const campaing = await Campaing.findById(id);
 	return {
 		campaing,

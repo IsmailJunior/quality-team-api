@@ -11,7 +11,9 @@
 		"prefer-arrow-callback": "off",
 		"no-process-exit": "off",
 		"no-use-before-define": "off",
-		"prefer-destructuring": ["error", {"object": true, "array": false}],
+		"no-underscore-dangle": "off",
+		"no-return-await": "off",
+		"prefer-destructuring": ["error", { "object": true, "array": false }],
 		"no-unused-vars": "off"
 	}
 }

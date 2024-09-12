@@ -1,10 +1,10 @@
 import {
-	getAllCampaingsService,
-	getCampaingByIdService,
+	findCampaingByIdService,
+	findCampaingsService,
 	createCampaingService,
 } from '../services/campaingService.mjs';
 
-export const createCampaingController = async (req, res) => {
+export const createCampaingController = async (req, res, _next) => {
 	const { body } = req;
 	const { campaing } = await createCampaingService(body);
 	res.status(201).json({
@@ -15,8 +15,8 @@ export const createCampaingController = async (req, res) => {
 	});
 };
 
-export const getAllCampaingsController = async (req, res) => {
-	const { campaings } = await getAllCampaingsService(req);
+export const getAllCampaingsController = async (req, res, _next) => {
+	const { campaings } = await findCampaingsService(req);
 	res.status(200).json({
 		status: 'success',
 		results: campaings.length,
@@ -26,9 +26,9 @@ export const getAllCampaingsController = async (req, res) => {
 	});
 };
 
-export const getCampaingByIdController = async (req, res) => {
+export const getCampaingByIdController = async (req, res, _next) => {
 	const id = Number(req.params.id);
-	const { campaing } = await getCampaingByIdService(id);
+	const { campaing } = await findCampaingByIdService(id);
 	res.status(200).json({
 		status: 'success',
 		data: {
