@@ -8,7 +8,10 @@ import {
 	getTourStatsController,
 	getMonthlyPlanController,
 } from '../controllers/tourController.mjs';
-import { protect, restrict } from '../controllers/authController.mjs';
+import {
+	protectRoutetMiddleware,
+	restrictRouteMiddleware,
+} from '../middlewares/auth.mjs';
 import aliasTopToursMiddleware from '../middlewares/aliasTopTours.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
@@ -16,32 +19,35 @@ const router = Router();
 
 router
 	.route('/tour-stats')
-	.get(catchAsync(protect), catchAsync(getTourStatsController));
+	.get(catchAsync(protectRoutetMiddleware), catchAsync(getTourStatsController));
 router
 	.route('/monthly-plans/:year')
-	.get(catchAsync(protect), catchAsync(getMonthlyPlanController));
+	.get(
+		catchAsync(protectRoutetMiddleware),
+		catchAsync(getMonthlyPlanController),
+	);
 router
 	.route('/top-five-cheap')
 	.get(
-		catchAsync(protect),
+		catchAsync(protectRoutetMiddleware),
 		aliasTopToursMiddleware,
 		catchAsync(getAllToursController),
 	);
 router
 	.route('/')
-	.get(catchAsync(protect), catchAsync(getAllToursController))
-	.post(catchAsync(protect), catchAsync(createTourController));
+	.get(catchAsync(protectRoutetMiddleware), catchAsync(getAllToursController))
+	.post(catchAsync(protectRoutetMiddleware), catchAsync(createTourController));
 router
 	.route('/:id')
-	.get(catchAsync(protect), catchAsync(getTourByIdController))
+	.get(catchAsync(protectRoutetMiddleware), catchAsync(getTourByIdController))
 	.patch(
-		catchAsync(protect),
-		restrict('admin'),
+		catchAsync(protectRoutetMiddleware),
+		restrictRouteMiddleware('admin'),
 		catchAsync(updateTourController),
 	)
 	.delete(
-		catchAsync(protect),
-		restrict('admin'),
+		catchAsync(protectRoutetMiddleware),
+		restrictRouteMiddleware('admin'),
 		catchAsync(deleteTourController),
 	);
 export default router;

@@ -1,21 +1,27 @@
 import { Router } from 'express';
 import {
 	signupController,
-	getAllUsersController,
-	deleteUserController,
 	loginController,
-	forgotPassword,
-	resetPassword
+	forgotPasswordController,
+	resetPasswordController,
+	updatePasswordController,
 } from '../controllers/authController.mjs';
+import { protectRoutetMiddleware } from '../middlewares/auth.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
 
 router.route('/signup').post(catchAsync(signupController));
 router.route('/login').post(catchAsync(loginController));
-router.route('/forgot-password').post(catchAsync(forgotPassword));
-router.route('/reset-password/:token').patch(catchAsync(resetPassword));
-router.route('/users').get(catchAsync(getAllUsersController));
-router.route('/users/:id').delete(catchAsync(deleteUserController));
+router.route('/forgotPassword').post(catchAsync(forgotPasswordController));
+router
+	.route('/updatePassword')
+	.patch(
+		catchAsync(protectRoutetMiddleware),
+		catchAsync(updatePasswordController),
+	);
+router
+	.route('/resetPassword/:token')
+	.patch(catchAsync(resetPasswordController));
 
 export default router;

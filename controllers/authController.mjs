@@ -1,16 +1,11 @@
-import { promisify } from 'util';
 import crypto from 'crypto';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
+import { signupService, loginService } from '../services/authService.mjs';
 import {
-	registerUserService,
-	findUsersService,
-	loginUserService,
-	deleteUserService,
-	findUserByIdService,
-	findUserService,
+	findUserByUsernameService,
 	findUserByPasswordTokenService,
-} from '../services/authService.mjs';
+	findUserWithPasswordByIdService,
+} from '../services/userService.mjs';
 import sendEmail from '../utils/email.mjs';
 import AppError from '../utils/appError.mjs';
 
@@ -22,7 +17,7 @@ const signToken = (id) =>
 export const signupController = async (req, res, _next) => {
 	const { name, username, password, passwordConfirm, passwordChangedAt, role } =
 		req.body;
-	const { user } = await registerUserService({
+	const { user } = await signupService({
 		name,
 		username,
 		password,
@@ -40,31 +35,11 @@ export const signupController = async (req, res, _next) => {
 	});
 };
 
-export const getAllUsersController = async (req, res, _next) => {
-	const { users } = await findUsersService(req);
-	res.status(200).json({
-		status: 'success',
-		data: {
-			users,
-		},
-	});
-};
-
-export const deleteUserController = async (req, res, next) => {
-	const { id } = req.params;
-	const { user } = await deleteUserService(id);
-	if (!user) return next(new AppError('The user dose not exist', 404));
-	res.status(204).json({
-		status: 'success',
-		data: null,
-	});
-};
-
 export const loginController = async (req, res, next) => {
 	const { username, password } = req.body;
 	if (!username || !password)
 		return next(new AppError('Please provide email and passowrd!', 400));
-	const { user } = await loginUserService({
+	const { user } = await loginService({
 		username,
 		password,
 	});
@@ -78,50 +53,9 @@ export const loginController = async (req, res, next) => {
 	});
 };
 
-export const protect = async (req, _res, next) => {
-	let token;
-	if (
-		req.headers.authorization &&
-		req.headers.authorization.startsWith('Bearer')
-	) {
-		token = req.headers.authorization.split(' ')[1];
-	}
-	if (!token)
-		return next(
-			new AppError('You are not logged in! Please login to get access.', 401),
-		);
-	const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-	const { user: freshUser } = await findUserByIdService(decoded.id);
-	if (!freshUser)
-		return next(
-			new AppError(
-				'The user belonging to this token dose no longer exist.',
-				401,
-			),
-		);
-	if (freshUser.changedPasswordAfter(decoded.iat)) {
-		return next(
-			new AppError('User recently changed password! Please login again.', 401),
-		);
-	}
-	req.user = freshUser;
-	next();
-};
-
-export const restrict =
-	(...roles) =>
-	(req, _res, next) => {
-		if (!roles.includes(req.user.role)) {
-			return next(
-				new AppError('You do not have permission to perform this action.', 403),
-			);
-		}
-		next();
-	};
-
-export const forgotPassword = async (req, res, next) => {
+export const forgotPasswordController = async (req, res, next) => {
 	const { email } = req.body;
-	const { user } = await findUserService(email);
+	const { user } = await findUserByUsernameService(email);
 	if (!user)
 		return next(new AppError('There is no user with email address.', 404));
 	const resetToken = user.createPasswordResetToken();
@@ -150,7 +84,7 @@ export const forgotPassword = async (req, res, next) => {
 	}
 };
 
-export const resetPassword = async (req, res, next) => {
+export const resetPasswordController = async (req, res, next) => {
 	const hashedTokrn = crypto
 		.createHash('sha256')
 		.update(req.params.token)
@@ -161,6 +95,24 @@ export const resetPassword = async (req, res, next) => {
 	user.passwordConfirm = req.body.passwordConfirm;
 	user.passwordResetToken = undefined;
 	user.passwordResetExpires = undefined;
+	await user.save();
+	const token = signToken(user._id);
+	res.status(200).json({
+		status: 'success',
+		token,
+	});
+};
+
+export const updatePasswordController = async (req, res, next) => {
+	const { user } = await findUserWithPasswordByIdService(req.user.id);
+	if (!req.body.passwordCurrent)
+		return next(new AppError('Please provide a valid password.', 400));
+	if (!user) return next(new AppError('The user dose not exist', 404));
+	if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+		return next(new AppError('Your current password is worng.', 401));
+	}
+	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
 	await user.save();
 	const token = signToken(user._id);
 	res.status(200).json({
