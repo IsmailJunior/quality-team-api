@@ -2,7 +2,8 @@
 import User from '../models/user.mjs';
 
 export const signupService = async ({
-	fullName,
+	firstName,
+	lastName,
 	username,
 	password,
 	passwordConfirm,
@@ -10,13 +11,14 @@ export const signupService = async ({
 	role,
 }) => {
 	const user = await User.create({
-		fullName,
+		firstName,
+		lastName,
 		username,
 		password,
 		passwordConfirm,
 		passwordChangedAt,
 		role,
-	});
+	})
 	return {
 		user,
 	};

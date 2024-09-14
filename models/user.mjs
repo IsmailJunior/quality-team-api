@@ -6,9 +6,15 @@ import slugify from 'slugify';
 
 const userSchema = new Schema({
 	slug: String,
-	fullName: {
+	firstName: {
 		type: String,
-		required: [true, 'A user must have a full name.'],
+		required: [true, 'A user must have a first name.'],
+		minLength: [3, 'Name must be more then 3 characters.'],
+		maxLength: [50, 'Name must be less or equal 50 characters.'],
+	},
+	lastName: {
+		type: String,
+		required: [true, 'A user must have a last name.'],
 		minLength: [3, 'Name must be more then 3 characters.'],
 		maxLength: [50, 'Name must be less or equal 50 characters.'],
 	},
@@ -62,7 +68,7 @@ userSchema.pre(/^find/, function (next) {
 });
 
 userSchema.pre('save', function (next) {
-	this.slug = slugify(this.fullName, { lower: true });
+	this.slug = slugify(`${this.firstName} ${this.lastName}`, { lower: true });
 	next();
 });
 

@@ -26,6 +26,8 @@ const createSendToken = (user, statusCode, res) => {
 	res.cookie('jwt', token, cookieOptions);
 	// eslint-disable-next-line no-param-reassign
 	user.password = undefined;
+	// eslint-disable-next-line no-param-reassign
+	user.active = undefined;
 	res.status(statusCode).json({
 		status: 'success',
 		token,
@@ -37,7 +39,8 @@ const createSendToken = (user, statusCode, res) => {
 
 export const signupController = async (req, res, _next) => {
 	const {
-		fullName,
+		firstName,
+		lastName,
 		username,
 		password,
 		passwordConfirm,
@@ -45,7 +48,8 @@ export const signupController = async (req, res, _next) => {
 		role,
 	} = req.body;
 	const { user } = await signupService({
-		fullName,
+		firstName,
+		lastName,
 		username,
 		password,
 		passwordConfirm,

@@ -10,6 +10,7 @@ const clientSchema = new Schema({
 	},
 	picture: String,
 	description: String,
+	mobileNumber: String,
 });
 
 clientSchema.pre('save', function (next) {
