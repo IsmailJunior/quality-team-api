@@ -61,3 +61,7 @@ export const updateMeService = async (dto) => {
 		user,
 	};
 };
+
+export const deleteMeService = async (dto) => {
+	await User.findByIdAndUpdate(dto, { active: false });
+};

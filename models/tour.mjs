@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { model, Schema } from 'mongoose';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import slugify from 'slugify';
 
 const tourSchema = new Schema(
@@ -75,7 +73,7 @@ const tourSchema = new Schema(
 			default: Date.now(),
 			select: false,
 		},
-		startDate: [Date],
+		startsDate: [Date],
 		secretTour: {
 			type: Boolean,
 			default: false,

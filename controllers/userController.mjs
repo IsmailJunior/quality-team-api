@@ -3,6 +3,7 @@ import {
 	findUserByIdService,
 	deleteUserService,
 	updateMeService,
+	deleteMeService,
 } from '../services/userService.mjs';
 import filterObject from '../utils/filterObject.mjs';
 import AppError from '../utils/appError.mjs';
@@ -55,5 +56,13 @@ export const updateMeController = async (req, res, next) => {
 	res.status(200).json({
 		status: 'success',
 		data: user,
+	});
+};
+
+export const deleteMeController = async (req, res, _next) => {
+	await deleteMeService(req.user.id);
+	res.status(204).json({
+		status: 'success',
+		data: null,
 	});
 };

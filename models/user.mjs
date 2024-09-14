@@ -2,11 +2,13 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import slugify from 'slugify';
 
 const userSchema = new Schema({
-	name: {
+	slug: String,
+	fullName: {
 		type: String,
-		required: [true, 'A user must have a name.'],
+		required: [true, 'A user must have a full name.'],
 		minLength: [3, 'Name must be more then 3 characters.'],
 		maxLength: [50, 'Name must be less or equal 50 characters.'],
 	},
@@ -22,6 +24,12 @@ const userSchema = new Schema({
 		type: String,
 		enum: ['user', 'admin'],
 		default: 'user',
+	},
+	mobileNumber: String,
+	active: {
+		type: Boolean,
+		default: true,
+		select: false,
 	},
 	password: {
 		type: String,
@@ -42,6 +50,20 @@ const userSchema = new Schema({
 	passwordChangedAt: Date,
 	passwordResetToken: String,
 	passwordResetExpires: Date,
+	createdAt: {
+		type: Date,
+		default: Date.now(),
+	},
+});
+
+userSchema.pre(/^find/, function (next) {
+	this.find({ active: { $ne: false } });
+	next();
+});
+
+userSchema.pre('save', function (next) {
+	this.slug = slugify(this.fullName, { lower: true });
+	next();
 });
 
 userSchema.pre('save', async function (next) {

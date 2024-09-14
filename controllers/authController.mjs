@@ -14,25 +14,45 @@ const signToken = (id) =>
 		expiresIn: process.env.JWT_EXPIRES_IN,
 	});
 
-export const signupController = async (req, res, _next) => {
-	const { name, username, password, passwordConfirm, passwordChangedAt, role } =
-		req.body;
-	const { user } = await signupService({
-		name,
-		username,
-		password,
-		passwordConfirm,
-		passwordChangedAt,
-		role,
-	});
+const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id);
-	res.status(201).json({
+	const cookieOptions = {
+		expires: new Date(
+			Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+		),
+		httpOnly: true,
+	};
+	if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+	res.cookie('jwt', token, cookieOptions);
+	// eslint-disable-next-line no-param-reassign
+	user.password = undefined;
+	res.status(statusCode).json({
 		status: 'success',
 		token,
 		data: {
 			user,
 		},
 	});
+};
+
+export const signupController = async (req, res, _next) => {
+	const {
+		fullName,
+		username,
+		password,
+		passwordConfirm,
+		passwordChangedAt,
+		role,
+	} = req.body;
+	const { user } = await signupService({
+		fullName,
+		username,
+		password,
+		passwordConfirm,
+		passwordChangedAt,
+		role,
+	});
+	createSendToken(user, 201, res);
 };
 
 export const loginController = async (req, res, next) => {
@@ -45,12 +65,7 @@ export const loginController = async (req, res, next) => {
 	});
 	if (!user || !(await user.correctPassword(password, user.password)))
 		return next(new AppError('Incorrect email or password.', 401));
-
-	const token = signToken(user._id);
-	res.status(200).json({
-		status: 'success',
-		token,
-	});
+	createSendToken(user, 200, res);
 };
 
 export const forgotPasswordController = async (req, res, next) => {
@@ -68,7 +83,7 @@ export const forgotPasswordController = async (req, res, next) => {
 			subject: 'Your password reset token (valid for 10 min)',
 			message,
 		});
-		res.status(200).json({
+		res.status(204).json({
 			status: 'success',
 			message: 'Token sent to email!',
 			data: null,
@@ -96,11 +111,7 @@ export const resetPasswordController = async (req, res, next) => {
 	user.passwordResetToken = undefined;
 	user.passwordResetExpires = undefined;
 	await user.save();
-	const token = signToken(user._id);
-	res.status(200).json({
-		status: 'success',
-		token,
-	});
+	createSendToken(user, 200, res);
 };
 
 export const updatePasswordController = async (req, res, next) => {
@@ -114,9 +125,5 @@ export const updatePasswordController = async (req, res, next) => {
 	user.password = req.body.password;
 	user.passwordConfirm = req.body.passwordConfirm;
 	await user.save();
-	const token = signToken(user._id);
-	res.status(200).json({
-		status: 'success',
-		token,
-	});
+	createSendToken(user, 200, res);
 };

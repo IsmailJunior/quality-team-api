@@ -4,6 +4,7 @@ import {
 	getUsersController,
 	deleteUserController,
 	updateMeController,
+	deleteMeController,
 } from '../controllers/userController.mjs';
 import {
 	protectRoutetMiddleware,
@@ -15,8 +16,9 @@ const router = Router();
 
 router.route('/').get(catchAsync(getUsersController));
 router
-	.route('/updateMe')
-	.patch(catchAsync(protectRoutetMiddleware), catchAsync(updateMeController));
+	.route('/me')
+	.patch(catchAsync(protectRoutetMiddleware), catchAsync(updateMeController))
+	.delete(catchAsync(protectRoutetMiddleware), catchAsync(deleteMeController));
 router
 	.route('/:id')
 	.get(catchAsync(getUserByIdController))
