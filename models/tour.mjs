@@ -70,7 +70,7 @@ const tourSchema = new Schema(
 		images: [String],
 		createdAt: {
 			type: Date,
-			default: Date.now(),
+			default: Date.now,
 			select: false,
 		},
 		startsDate: [Date],
@@ -78,6 +78,30 @@ const tourSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		startLocation: {
+			type: {
+				type: String,
+				default: 'Point',
+				enum: ['Point'],
+			},
+			coordinates: [Number],
+			address: String,
+			description: String,
+		},
+		locations: [
+			{
+				type: {
+					type: String,
+					default: 'Point',
+					enum: ['Point'],
+				},
+				coordinates: [Number],
+				address: String,
+				description: String,
+				day: Number,
+			},
+		],
+		guides: [{ type: Schema.ObjectId, ref: 'User' }],
 	},
 	{
 		toJSON: { virtuals: true },
@@ -96,6 +120,14 @@ tourSchema.pre('save', function (next) {
 
 tourSchema.pre(/^find/, function (next) {
 	this.find({ secretTour: { $ne: true } });
+	next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+	this.select('-__v').populate({
+		path: 'guides',
+		select: '-__v',
+	});
 	next();
 });
 

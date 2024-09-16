@@ -7,6 +7,11 @@ const hypermediaSchema = new Schema({
 	video: String,
 });
 
+hypermediaSchema.pre(/^find/, function (next) {
+	this.select('-__v');
+	next();
+});
+
 const Hypermedia = model('Hypermedia', hypermediaSchema);
 
 export default Hypermedia;

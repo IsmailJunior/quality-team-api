@@ -8,7 +8,6 @@ export const signupService = async ({
 	password,
 	passwordConfirm,
 	passwordChangedAt,
-	role,
 }) => {
 	const user = await User.create({
 		firstName,
@@ -17,8 +16,7 @@ export const signupService = async ({
 		password,
 		passwordConfirm,
 		passwordChangedAt,
-		role,
-	})
+	});
 	return {
 		user,
 	};

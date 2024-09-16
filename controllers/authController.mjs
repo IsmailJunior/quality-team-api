@@ -45,7 +45,6 @@ export const signupController = async (req, res, _next) => {
 		password,
 		passwordConfirm,
 		passwordChangedAt,
-		role,
 	} = req.body;
 	const { user } = await signupService({
 		firstName,
@@ -54,7 +53,6 @@ export const signupController = async (req, res, _next) => {
 		password,
 		passwordConfirm,
 		passwordChangedAt,
-		role,
 	});
 	createSendToken(user, 201, res);
 };
@@ -65,7 +63,6 @@ export const loginController = async (req, res, next) => {
 		return next(new AppError('Please provide email and passowrd!', 400));
 	const { user } = await loginService({
 		username,
-		password,
 	});
 	if (!user || !(await user.correctPassword(password, user.password)))
 		return next(new AppError('Incorrect email or password.', 401));

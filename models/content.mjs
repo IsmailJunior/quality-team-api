@@ -35,8 +35,24 @@ const contentSchema = new Schema({
 	image: String,
 	created_at: {
 		type: Date,
-		default: Date.now(),
+		default: Date.now,
 	},
+	hypermedia: {
+		type: Schema.ObjectId,
+		ref: 'Hypermedia',
+	},
+	tier: {
+		type: Schema.ObjectId,
+		ref: 'Tier',
+	},
+});
+
+contentSchema.pre(/^find/, function (next) {
+	this.select('-__v').populate({
+		path: 'hypermedia',
+		select: '-__v',
+	});
+	next();
 });
 
 contentSchema.pre('save', function (next) {

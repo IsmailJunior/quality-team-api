@@ -3,67 +3,87 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import slugify from 'slugify';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import moment from 'moment';
 
-const userSchema = new Schema({
-	slug: String,
-	firstName: {
-		type: String,
-		required: [true, 'A user must have a first name.'],
-		minLength: [3, 'Name must be more then 3 characters.'],
-		maxLength: [50, 'Name must be less or equal 50 characters.'],
-	},
-	lastName: {
-		type: String,
-		required: [true, 'A user must have a last name.'],
-		minLength: [3, 'Name must be more then 3 characters.'],
-		maxLength: [50, 'Name must be less or equal 50 characters.'],
-	},
-	username: {
-		type: String,
-		required: [true, 'A user must have a username.'],
-		trim: true,
-		lowercase: true,
-		unique: true,
-		validate: [validator.isEmail, 'Please provide a valid username.'],
-	},
-	role: {
-		type: String,
-		enum: ['user', 'admin'],
-		default: 'user',
-	},
-	mobileNumber: String,
-	active: {
-		type: Boolean,
-		default: true,
-		select: false,
-	},
-	password: {
-		type: String,
-		required: [true, 'Please provide a password.'],
-		minLength: 8,
-		select: false,
-	},
-	passwordConfirm: {
-		type: String,
-		required: [true, 'Please confirm your password.'],
-		validate: {
-			validator: function (element) {
-				return element === this.password;
+const userSchema = new Schema(
+	{
+		slug: String,
+		firstName: {
+			type: String,
+			required: [true, 'A user must have a first name.'],
+			minLength: [3, 'Name must be more then 3 characters.'],
+			maxLength: [50, 'Name must be less or equal 50 characters.'],
+		},
+		lastName: {
+			type: String,
+			required: [true, 'A user must have a last name.'],
+			minLength: [3, 'Name must be more then 3 characters.'],
+			maxLength: [50, 'Name must be less or equal 50 characters.'],
+		},
+		username: {
+			type: String,
+			required: [true, 'A user must have a username.'],
+			trim: true,
+			lowercase: true,
+			unique: true,
+			validate: [validator.isEmail, 'Please provide a valid username.'],
+		},
+		role: {
+			type: String,
+			enum: ['user', 'admin'],
+			default: 'user',
+		},
+		mobileNumber: String,
+		active: {
+			type: Boolean,
+			default: true,
+			select: false,
+		},
+		password: {
+			type: String,
+			required: [true, 'Please provide a password.'],
+			minLength: 8,
+			select: false,
+		},
+		passwordConfirm: {
+			type: String,
+			required: [true, 'Please confirm your password.'],
+			validate: {
+				validator: function (element) {
+					return element === this.password;
+				},
+				message: 'Comfirmed password must be the same as password.',
 			},
-			message: 'Comfirmed password must be the same as password.',
+		},
+		passwordChangedAt: Date,
+		passwordResetToken: String,
+		passwordResetExpires: Date,
+		createdAt: {
+			type: Date,
+			default: Date.now,
 		},
 	},
-	passwordChangedAt: Date,
-	passwordResetToken: String,
-	passwordResetExpires: Date,
-	createdAt: {
-		type: Date,
-		default: Date.now(),
+	{
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true },
 	},
+);
+
+userSchema.virtual('createdAtLocale').get(function () {
+	moment.locale('ar-dz');
+	return moment(this.createdAt).format('MMMM Do YYYY, h:mm a');
+});
+
+userSchema.virtual('memberSince').get(function () {
+	moment.locale('ar-dz');
+	return moment(this.createdAt).fromNow();
 });
 
 userSchema.pre(/^find/, function (next) {
-	this.find({ active: { $ne: false } });
+	this.select('-__v')
+		.find({ active: { $ne: false } })
+		.select('-__v');
 	next();
 });
 

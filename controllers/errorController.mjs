@@ -6,7 +6,7 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsErrorDB = (err) => {
-	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+	const value = err.errorResponse.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 	const message = `Duplicate Field value: ${value}, Please use another value!`;
 	return new AppError(message, 400);
 };
@@ -57,7 +57,7 @@ const globalErrorController = (err, _req, res, _next) => {
 		devError(err, res);
 	}
 	if (process.env.NODE_ENV === 'production') {
-		let error = { ...err, name: err.name };
+		let error = { ...err };
 		if (error.name === 'CastError') error = handleCastErrorDB(error);
 		if (error.code === 11000) error = handleDuplicateFieldsErrorDB(error);
 		if (error.name === 'ValidationError')

@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import {
-	getUserByIdController,
-	getUsersController,
-	deleteUserController,
-	getMeController,
-	updateMeController,
-	deleteMeController,
-} from '../controllers/userController.mjs';
+	getClientsController,
+	getClientController,
+	createClientController,
+	updateClientController,
+	getCurrentClient,
+} from '../controllers/clientController.mjs';
 import {
 	protectRoutetMiddleware,
 	restrictRouteMiddleware,
@@ -20,24 +19,28 @@ router
 	.get(
 		catchAsync(protectRoutetMiddleware),
 		restrictRouteMiddleware('admin'),
-		catchAsync(getUsersController),
+		catchAsync(getClientsController),
+	)
+	.post(
+		catchAsync(protectRoutetMiddleware),
+		catchAsync(createClientController),
 	);
+
 router
 	.route('/me')
-	.get(catchAsync(protectRoutetMiddleware), catchAsync(getMeController))
-	.patch(catchAsync(protectRoutetMiddleware), catchAsync(updateMeController))
-	.delete(catchAsync(protectRoutetMiddleware), catchAsync(deleteMeController));
+	.get(catchAsync(protectRoutetMiddleware), catchAsync(getCurrentClient));
+
 router
 	.route('/:id')
 	.get(
 		catchAsync(protectRoutetMiddleware),
 		restrictRouteMiddleware('admin'),
-		catchAsync(getUserByIdController),
+		catchAsync(getClientController),
 	)
-	.delete(
+	.patch(
 		catchAsync(protectRoutetMiddleware),
 		restrictRouteMiddleware('admin'),
-		catchAsync(deleteUserController),
+		catchAsync(updateClientController),
 	);
 
 export default router;

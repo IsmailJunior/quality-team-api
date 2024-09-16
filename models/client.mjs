@@ -11,6 +11,28 @@ const clientSchema = new Schema({
 	picture: String,
 	description: String,
 	mobileNumber: String,
+	plan: {
+		type: Schema.ObjectId,
+		ref: 'Plan',
+	},
+	user: {
+		type: Schema.ObjectId,
+		required: [true, 'A client must created under a certain user.'],
+		ref: 'User',
+	},
+});
+
+clientSchema.pre(/^find/, function (next) {
+	this.select('-__v')
+		.populate({
+			path: 'plan',
+			select: '-__v',
+		})
+		.populate({
+			path: 'user',
+			select: 'firstName lastName createdAt',
+		});
+	next();
 });
 
 clientSchema.pre('save', function (next) {

@@ -40,6 +40,14 @@ export const deleteUserController = async (req, res, next) => {
 	});
 };
 
+export const getMeController = async (req, res, _next) => {
+	const { user } = await findUserByIdService(req.user.id);
+	res.status(200).json({
+		status: 'success',
+		data: user,
+	});
+};
+
 export const updateMeController = async (req, res, next) => {
 	if (req.body.password || req.body.passwordConfirm)
 		return next(
