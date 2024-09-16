@@ -35,6 +35,7 @@ app.use(limiter);
 
 // Middlewares
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());

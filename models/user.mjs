@@ -29,6 +29,7 @@ const userSchema = new Schema(
 			unique: true,
 			validate: [validator.isEmail, 'Please provide a valid username.'],
 		},
+		photo: String,
 		role: {
 			type: String,
 			enum: ['user', 'admin'],

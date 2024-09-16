@@ -31,7 +31,13 @@ export const updateMeController = async (req, res, next) => {
 				400,
 			),
 		);
-	const filteredBody = filterObject(req.body, 'name', 'username');
+	const filteredBody = filterObject(
+		req.body,
+		'firstName',
+		'lastName',
+		'username',
+	);
+	if (req.file) filteredBody.photo = req.file.path;
 	const { user } = await updateMeService({
 		id: req.user.id,
 		body: filteredBody,

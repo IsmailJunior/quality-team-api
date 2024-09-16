@@ -1,7 +1,23 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import multer from 'multer';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
+import { storage } from '../config/cloudinary.mjs';
 import AppError from '../utils/appError.mjs';
 import { findUserByIdService } from '../services/userService.mjs';
+
+const multerFilter = (_req, file, cb) => {
+	if (file.mimetype.startsWith('image')) {
+		cb(null, true);
+	} else {
+		cb(new AppError('Not an image! Please upload only images.', 400), false);
+	}
+};
+
+const upload = multer({ storage, fileFilter: multerFilter });
+
+export const uploadUserPhotoMiddleware = upload.single('photo');
 
 export const restrictRouteMiddleware =
 	(...roles) =>
