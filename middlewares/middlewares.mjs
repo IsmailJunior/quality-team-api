@@ -43,3 +43,25 @@ export const protectRoutetMiddleware = async (req, _res, next) => {
 	req.user = freshUser;
 	next();
 };
+
+export const aliasTopToursMiddleware = (req, _res, next) => {
+	req.query.limit = '5';
+	req.query.sort = '-ratingsAverage,price';
+	req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+	next();
+};
+
+export const setPlanIdToTiersMiddleware = (req, _res, next) => {
+	if (!req.body.plan) req.body.plan = req.params.planId;
+	next();
+};
+
+export const setUserIdToClientMiddleware = (req, _res, next) => {
+	if (!req.body.user) req.body.user = req.user.id;
+	next();
+};
+
+export const getMeMiddleware = (req, _res, next) => {
+	req.params.id = req.user.id;
+	next();
+};

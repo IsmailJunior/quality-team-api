@@ -1,52 +1,27 @@
+import { updateMeService, deleteMeService } from '../services/userService.mjs';
 import {
-	findUsersService,
-	findUserByIdService,
-	deleteUserService,
-	updateMeService,
-	deleteMeService,
-} from '../services/userService.mjs';
+	deleteDocController,
+	findDocByIdController,
+	findDocsController,
+} from './controllerFactory.mjs';
+import {
+	deleteDocService,
+	findDocByIdService,
+	findDocsService,
+} from '../services/serviceFactory.mjs';
+import User from '../models/user.mjs';
 import filterObject from '../utils/filterObject.mjs';
 import AppError from '../utils/appError.mjs';
 
-export const getUsersController = async (req, res, _next) => {
-	const { users } = await findUsersService(req);
-	res.status(200).json({
-		status: 'success',
-		data: {
-			users,
-		},
-	});
-};
+export const getUsersController = findDocsController(findDocsService(User));
 
-export const getUserByIdController = async (req, res, next) => {
-	const { id } = req.params;
-	const { user } = await findUserByIdService(id);
-	if (!user) return next(new AppError('The user dose not exist', 404));
-	res.status(200).json({
-		status: 'success',
-		data: {
-			user,
-		},
-	});
-};
+export const getUserByIdController = findDocByIdController(
+	findDocByIdService(User),
+);
 
-export const deleteUserController = async (req, res, next) => {
-	const { id } = req.params;
-	const { user } = await deleteUserService(id);
-	if (!user) return next(new AppError('The user dose not exist', 404));
-	res.status(204).json({
-		status: 'success',
-		data: null,
-	});
-};
+export const deleteUserController = deleteDocController(deleteDocService(User));
 
-export const getMeController = async (req, res, _next) => {
-	const { user } = await findUserByIdService(req.user.id);
-	res.status(200).json({
-		status: 'success',
-		data: user,
-	});
-};
+export const getMeController = findDocByIdController(findDocByIdService(User));
 
 export const updateMeController = async (req, res, next) => {
 	if (req.body.password || req.body.passwordConfirm)

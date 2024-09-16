@@ -1,21 +1,9 @@
-import {
-	createTierService,
-	findTiersService,
-} from '../services/tierService.mjs';
+import { findTiersService } from '../services/tierService.mjs';
+import { createDocService } from '../services/serviceFactory.mjs';
+import { createDocController } from './controllerFactory.mjs';
+import Tier from '../models/tier.mjs';
 
-export const createTierController = async (req, res, _next) => {
-	if (!req.body.plan) req.body.plan = req.params.planId;
-	const { name, description, plan } = req.body;
-	const { tier } = await createTierService({
-		name,
-		description,
-		plan,
-	});
-	res.status(201).json({
-		status: 'success',
-		data: tier,
-	});
-};
+export const createTierController = createDocController(createDocService(Tier));
 
 export const getTiersController = async (req, res, _next) => {
 	const {

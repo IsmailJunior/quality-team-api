@@ -8,39 +8,24 @@ import {
 } from '../controllers/clientController.mjs';
 import {
 	protectRoutetMiddleware,
-	restrictRouteMiddleware,
-} from '../middlewares/auth.mjs';
+	setUserIdToClientMiddleware,
+} from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
 
-router
-	.route('/')
-	.get(
-		catchAsync(protectRoutetMiddleware),
-		restrictRouteMiddleware('admin'),
-		catchAsync(getClientsController),
-	)
-	.post(
-		catchAsync(protectRoutetMiddleware),
-		catchAsync(createClientController),
-	);
+router.use(catchAsync(protectRoutetMiddleware));
 
 router
-	.route('/me')
-	.get(catchAsync(protectRoutetMiddleware), catchAsync(getCurrentClient));
+	.route('/')
+	.get(catchAsync(getClientsController))
+	.post(setUserIdToClientMiddleware, catchAsync(createClientController));
+
+router.route('/me').get(catchAsync(getCurrentClient));
 
 router
 	.route('/:id')
-	.get(
-		catchAsync(protectRoutetMiddleware),
-		restrictRouteMiddleware('admin'),
-		catchAsync(getClientController),
-	)
-	.patch(
-		catchAsync(protectRoutetMiddleware),
-		restrictRouteMiddleware('admin'),
-		catchAsync(updateClientController),
-	);
+	.get(catchAsync(getClientController))
+	.patch(catchAsync(updateClientController));
 
 export default router;

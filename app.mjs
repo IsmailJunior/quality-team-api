@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line node/no-unpublished-import, import/no-extraneous-dependencies
 import logger from 'morgan';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -11,12 +11,12 @@ import hpp from 'hpp';
 import AppError from './utils/appError.mjs';
 import globalErrorController from './controllers/errorController.mjs';
 
-import toursRouter from './routes/tourRoutes.mjs';
+import tourRouter from './routes/tourRoutes.mjs';
 import authRouter from './routes/authRoutes.mjs';
-import usersRouter from './routes/userRoutes.mjs';
-import clientsRouter from './routes/clientRouter.mjs';
-import plansRouter from './routes/planRouter.mjs';
-import tiersRouter from './routes/tierRoutes.mjs';
+import userRouter from './routes/userRoutes.mjs';
+import clientRouter from './routes/clientRouter.mjs';
+import planRouter from './routes/planRouter.mjs';
+import tierRouter from './routes/tierRoutes.mjs';
 
 if (process.env.NODE_ENV !== 'production') {
 	dotenv.config();
@@ -43,12 +43,12 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Routes
-app.use('/api/v1/tours', toursRouter);
-app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/clients', clientsRouter);
-app.use('/api/v1/plans', plansRouter);
-app.use('/api/v1/tiers', tiersRouter);
+app.use('/api/v1/clients', clientRouter);
+app.use('/api/v1/plans', planRouter);
+app.use('/api/v1/tiers', tierRouter);
 
 app.all('*', (req, _res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
