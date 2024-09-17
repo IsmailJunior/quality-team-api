@@ -8,7 +8,7 @@ const handleCastErrorDB = (err) => {
 const handleDuplicateFieldsErrorDB = (err) => {
 	const value = err.errorResponse.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 	const message = `Duplicate Field value: ${value}, Please use another value!`;
-	return new AppError(message, 400);
+	return new AppError(message, 400, 11000);
 };
 
 const handleValidationErrorDB = (err) => {
@@ -23,13 +23,16 @@ const handleJWTError = () =>
 const handleJWTExpireError = () =>
 	new AppError('Your token has expired!, Please log in again.', 401);
 
-const devError = (err, res) => {
-	if (err.isOperational) {
+const devError = (err, req, res) => {
+	if (err.isOperational === true) {
 		res.status(err.statusCode).json({
 			status: err.status,
-			err: err,
+			error: { ...err, code: err.code },
+			timestamp: new Date(),
+			endpoint: req.path,
 			message: err.message,
 			stack: err.stack,
+			payload: req.body,
 		});
 	} else {
 		console.error('ERORR', err);
@@ -47,14 +50,14 @@ const prodError = (err, res) => {
 	});
 };
 
-const globalErrorController = (err, _req, res, _next) => {
+const globalErrorController = (err, req, res, _next) => {
 	// eslint-disable-next-line no-param-reassign
 	err.statusCode = err.statusCode || 500;
 	// eslint-disable-next-line no-param-reassign
 	err.status = err.status || 'Error';
 
 	if (process.env.NODE_ENV === 'development') {
-		devError(err, res);
+		devError(err, req, res);
 	}
 	if (process.env.NODE_ENV === 'production') {
 		let error = { ...err };

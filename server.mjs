@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-unpublished-import
 import chalk from 'chalk';
 import app from './app.mjs';
 

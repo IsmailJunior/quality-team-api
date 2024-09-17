@@ -8,7 +8,6 @@ const clientSchema = new Schema({
 		required: [true, 'A client must have a name.'],
 		maxLnegth: [15, 'Name must be less or equal 15 characters.'],
 	},
-	picture: String,
 	description: String,
 	mobileNumber: String,
 	plan: {

@@ -40,7 +40,7 @@ export const updateMeController = async (req, res, next) => {
 	if (req.file) filteredBody.photo = req.file.path;
 	const { user } = await updateMeService({
 		id: req.user.id,
-		body: filteredBody,
+		body: req.body,
 	});
 	res.status(200).json({
 		status: 'success',

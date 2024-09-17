@@ -27,8 +27,10 @@ export const createClientService = async (dto) => {
 	};
 };
 
-export const updateClientService = async (id, dto) => {
-	const client = await Client.findByIdAndUpdate(id, dto, {
+export const updateClientService = async (dto) => {
+	const { id, body } = dto;
+	console.log(dto)
+	const client = await Client.findByIdAndUpdate(id, body, {
 		new: true,
 		runValidators: true,
 	});
@@ -36,6 +38,7 @@ export const updateClientService = async (id, dto) => {
 		client,
 	};
 };
+
 
 export const findClientByUserService = async (dto) => {
 	const client = await Client.findOne({ user: dto });
