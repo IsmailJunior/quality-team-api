@@ -23,24 +23,20 @@ export const deleteUserController = deleteDocController(deleteDocService(User));
 
 export const getMeController = findDocByIdController(findDocByIdService(User));
 
-export const updateMeController = async (req, res, next) => {
-	if (req.body.password || req.body.passwordConfirm)
-		return next(
-			new AppError(
-				'This route is not for password updates. Please use /updatePassword.',
-				400,
-			),
-		);
+export const updateMeController = async (req, res, _next) => {
 	const filteredBody = filterObject(
 		req.body,
 		'firstName',
 		'lastName',
 		'username',
+		'mobileNumber',
+		'password',
+		'passwordConfirm',
 	);
 	if (req.file) filteredBody.photo = req.file.path;
 	const { user } = await updateMeService({
 		id: req.user.id,
-		body: req.body,
+		body: filteredBody,
 	});
 	res.status(200).json({
 		status: 'success',

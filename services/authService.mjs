@@ -1,22 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import User from '../models/user.mjs';
 
-export const signupService = async ({
-	firstName,
-	lastName,
-	username,
-	password,
-	passwordConfirm,
-	passwordChangedAt,
-}) => {
-	const user = await User.create({
-		firstName,
-		lastName,
-		username,
-		password,
-		passwordConfirm,
-		passwordChangedAt,
-	});
+export const signupService = async (dto) => {
+	const user = await User.create(dto);
 	return {
 		user,
 	};

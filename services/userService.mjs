@@ -28,7 +28,7 @@ export const findUserByIdService = async (id) => {
 };
 
 export const findUserByUsernameService = async (dto) => {
-	const user = await User.findOne({ username: dto });
+	const user = await User.findByUsername(dto);
 	return {
 		user,
 	};
