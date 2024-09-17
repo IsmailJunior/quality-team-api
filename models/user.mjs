@@ -2,13 +2,11 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import slugify from 'slugify';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 
 const userSchema = new Schema(
 	{
-		slug: String,
 		firstName: {
 			type: String,
 			minLength: [3, 'Name must be more then 3 characters.'],
@@ -82,11 +80,6 @@ userSchema.pre(/^find/, function (next) {
 	this.select('-__v')
 		.find({ active: { $ne: false } })
 		.select('-__v');
-	next();
-});
-
-userSchema.pre('save', function (next) {
-	this.slug = slugify(`${this.firstName} ${this.lastName}`, { lower: true });
 	next();
 });
 

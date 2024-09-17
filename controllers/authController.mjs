@@ -38,7 +38,6 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 export const signupController = async (req, res, _next) => {
-	console.log(req.body);
 	const { user } = await signupService(req.body);
 	createSendToken(user, 201, res);
 };
