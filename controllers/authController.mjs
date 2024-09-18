@@ -29,7 +29,6 @@ const createSendToken = (user, statusCode, res) => {
 	});
 };
 
-
 export const signupController = async (req, res, _next) => {
 	const {
 		firstName,
