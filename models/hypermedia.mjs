@@ -1,10 +1,11 @@
 import { Schema, model } from 'mongoose';
 
 const hypermediaSchema = new Schema({
-	cover: String,
-	image: String,
-	thumbnail: String,
-	video: String,
+	url: {
+		required: [true, 'Url cannot be empty.'],
+		type: String,
+		trim: true,
+	},
 });
 
 hypermediaSchema.pre(/^find/, function (next) {

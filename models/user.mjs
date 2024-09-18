@@ -28,13 +28,15 @@ const userSchema = new Schema(
 			unique: true,
 			validate: [validator.isEmail, 'Please provide a valid username.'],
 		},
-		photo: String,
 		role: {
 			type: String,
 			enum: ['user', 'admin'],
 			default: 'user',
 		},
-		mobileNumber: String,
+		hypermedia: {
+			type: Schema.ObjectId,
+			ref: 'Hypermedia',
+		},
 		active: {
 			type: Boolean,
 			default: true,
@@ -59,20 +61,28 @@ const userSchema = new Schema(
 		passwordChangedAt: Date,
 		passwordResetToken: String,
 		passwordResetExpires: Date,
-		createdAt: {
-			type: Date,
-			default: Date.now,
-		},
 	},
 	{
+		timestamps: true,
 		toJSON: { virtuals: true },
 		toObject: { virtuals: true },
 	},
 );
 
+userSchema.virtual('profile').get(function () {
+	return this.hypermedia.url.replace(
+		'/upload',
+		'/upload/w_200,h_200,c_thumb,r_max/q_auto/f_auto',
+	);
+});
+
 userSchema.virtual('createdAtLocale').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.createdAt).format('MMMM Do YYYY, h:mm a');
+});
+userSchema.virtual('updatedAtLocale').get(function () {
+	moment.locale('ar-dz');
+	return moment(this.updatedAt).format('MMMM Do YYYY, h:mm a');
 });
 
 userSchema.virtual('memberSince').get(function () {
@@ -83,7 +93,11 @@ userSchema.virtual('memberSince').get(function () {
 userSchema.pre(/^find/, function (next) {
 	this.select('-__v')
 		.find({ active: { $ne: false } })
-		.select('-__v');
+		.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		});
 	next();
 });
 

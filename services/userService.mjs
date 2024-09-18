@@ -1,4 +1,5 @@
 import User from '../models/user.mjs';
+import Hypermedia from '../models/hypermedia.mjs';
 import APIFeatures from '../utils/apiFeatures.mjs';
 
 export const findUsersService = async (dto) => {
@@ -53,10 +54,15 @@ export const findUserWithPasswordByIdService = async (dto) => {
 
 export const updateMeService = async (dto) => {
 	const { id, body } = dto;
-	const user = await User.findByIdAndUpdate(id, body, {
-		new: true,
-		runValidators: true,
-	});
+	const hypermedia = await Hypermedia.create({ url: body.photo });
+	const user = await User.findByIdAndUpdate(
+		id,
+		{ ...body, hypermedia },
+		{
+			new: true,
+			runValidators: true,
+		},
+	);
 	return {
 		user,
 	};
