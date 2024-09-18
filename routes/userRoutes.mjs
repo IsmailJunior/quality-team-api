@@ -21,7 +21,7 @@ router.use(catchAsync(protectRoutetMiddleware));
 router.route('/').get(catchAsync(getUsersController));
 router
 	.route('/me')
-	.get(getMeMiddleware, catchAsync(getMeController))
+	// .get(getMeMiddleware, catchAsync(getMeController))
 	.get(uploadUserPhotoMiddleware, catchAsync(updateMeController))
 	.delete(catchAsync(deleteMeController));
 router
