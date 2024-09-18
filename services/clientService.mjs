@@ -38,7 +38,6 @@ export const updateClientService = async (dto) => {
 	};
 };
 
-
 export const findClientByUserService = async (dto) => {
 	const client = await Client.findOne({ user: dto });
 	return { client };
