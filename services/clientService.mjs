@@ -29,7 +29,6 @@ export const createClientService = async (dto) => {
 
 export const updateClientService = async (dto) => {
 	const { id, body } = dto;
-	console.log(dto)
 	const client = await Client.findByIdAndUpdate(id, body, {
 		new: true,
 		runValidators: true,

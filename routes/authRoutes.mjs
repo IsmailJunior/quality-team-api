@@ -5,6 +5,7 @@ import {
 	forgotPasswordController,
 	resetPasswordController,
 	updatePasswordController,
+	logoutController,
 } from '../controllers/authController.mjs';
 import {
 	protectRoutetMiddleware,
@@ -18,6 +19,7 @@ router
 	.route('/signup')
 	.post(uploadUserPhotoMiddleware, catchAsync(signupController));
 router.route('/login').post(catchAsync(loginController));
+router.route('/logout').get(catchAsync(logoutController));
 router.route('/forgotPassword').post(catchAsync(forgotPasswordController));
 router
 	.route('/resetPassword/:token')

@@ -54,6 +54,16 @@ export const loginController = async (req, res, next) => {
 	createSendToken(user, 200, res);
 };
 
+export const logoutController = async (_req, res, _next) => {
+	res.cookie('jwt', 'loggedout', {
+		expiresIn: new Date(Date.now()) + 10 * 1000,
+		httpOnly: true,
+	});
+	res.status(200).json({
+		status: 'success',
+	});
+};
+
 export const forgotPasswordController = async (req, res, next) => {
 	const { email } = req.body;
 	const { user } = await findUserByUsernameService(email);

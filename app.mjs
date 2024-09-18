@@ -8,7 +8,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import bodyParser from 'body-parser';
+import compression from 'compression';
 
 import AppError from './utils/appError.mjs';
 import globalErrorController from './controllers/errorController.mjs';
@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
+app.use(compression());
 if (process.env.NODE_ENV !== 'production') {
 	app.use(logger('dev'));
 }
