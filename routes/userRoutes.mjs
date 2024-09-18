@@ -22,7 +22,7 @@ router.route('/').get(catchAsync(getUsersController));
 router
 	.route('/me')
 	.get(getMeMiddleware, catchAsync(getMeController))
-	.post(uploadUserPhotoMiddleware, catchAsync(updateMeController))
+	.get(uploadUserPhotoMiddleware, catchAsync(updateMeController))
 	.delete(catchAsync(deleteMeController));
 router
 	.route('/:id')
