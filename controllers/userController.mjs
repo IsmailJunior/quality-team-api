@@ -11,6 +11,7 @@ import {
 } from '../services/serviceFactory.mjs';
 import User from '../models/user.mjs';
 import filterObject from '../utils/filterObject.mjs';
+import AppError from '../utils/appError.mjs';
 
 export const getUsersController = findDocsController(findDocsService(User));
 
@@ -21,16 +22,19 @@ export const getUserByIdController = findDocByIdController(
 export const deleteUserController = deleteDocController(deleteDocService(User));
 
 export const getMeController = findDocByIdController(findDocByIdService(User));
-
-export const updateMeController = async (req, res, _next) => {
+export const updateMeController = async (req, res, next) => {
+	if (req.body.password || req.body.passwordConfirm)
+		return next(
+			new AppError(
+				'This route is not for password updates. Please use /updatePassword.',
+				400,
+			),
+		);
 	const filteredBody = filterObject(
 		req.body,
 		'firstName',
 		'lastName',
 		'username',
-		'mobileNumber',
-		'password',
-		'passwordConfirm',
 	);
 	if (req.file) filteredBody.photo = req.file.path;
 	const { user } = await updateMeService({
