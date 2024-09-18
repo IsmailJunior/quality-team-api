@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Tour from '../models/tour.mjs';
 import APIFeatures from '../utils/apiFeatures.mjs';
 

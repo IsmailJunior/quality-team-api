@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import User from '../models/user.mjs';
 
 export const signupService = async (dto) => {

@@ -2,7 +2,6 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 
 const userSchema = new Schema(

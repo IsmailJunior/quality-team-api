@@ -1,8 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { v2 as cloudinary } from 'cloudinary';
-import dotenv from 'dotenv';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import dotenv from 'dotenv';
+
 
 if (process.env.NODE_ENV !== 'production') {
 	dotenv.config();

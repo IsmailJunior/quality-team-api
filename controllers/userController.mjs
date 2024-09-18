@@ -11,7 +11,6 @@ import {
 } from '../services/serviceFactory.mjs';
 import User from '../models/user.mjs';
 import filterObject from '../utils/filterObject.mjs';
-import AppError from '../utils/appError.mjs';
 
 export const getUsersController = findDocsController(findDocsService(User));
 

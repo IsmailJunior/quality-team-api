@@ -16,14 +16,6 @@ const signToken = (id) =>
 
 const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id);
-	const cookieOptions = {
-		expires: new Date(
-			Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
-		),
-		httpOnly: true,
-	};
-	if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-	res.cookie('jwt', token, cookieOptions);
 	// eslint-disable-next-line no-param-reassign
 	user.password = undefined;
 	// eslint-disable-next-line no-param-reassign
@@ -52,16 +44,6 @@ export const loginController = async (req, res, next) => {
 	if (!user || !(await user.correctPassword(password, user.password)))
 		return next(new AppError('Incorrect email or password.', 401));
 	createSendToken(user, 200, res);
-};
-
-export const logoutController = async (_req, res, _next) => {
-	res.cookie('jwt', 'loggedout', {
-		expiresIn: new Date(Date.now()) + 10 * 1000,
-		httpOnly: true,
-	});
-	res.status(200).json({
-		status: 'success',
-	});
 };
 
 export const forgotPasswordController = async (req, res, next) => {

@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import multer from 'multer';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
 import { storage } from '../config/cloudinary.mjs';
