@@ -1,19 +1,19 @@
 const globalErrorController = (err, req, res, _next) => {
-	const error = {
-		...err,
-	};
-	if (err.name === 'ValidationError') {
-		error.statusCode = 422;
-		error.status = 'ValidationError';
-	}
+	// const error = {
+	// 	...err,
+	// };
+	// if (err.name === 'ValidationError') {
+	// 	error.statusCode = 422;
+	// 	error.status = 'ValidationError';
+	// }
 
-	res.status(error.statusCode).json({
-		status: error.status,
-		errors: [error.errors],
+	res.status(err.statusCode).json({
+		status: err.status,
+		errors: [err.errors],
 		timestamp: new Date(),
 		endpoint: req.path,
-		message: error.message,
-		stack: error.stack,
+		message: err.message,
+		stack: err.stack,
 		payload: req.body,
 	});
 };
