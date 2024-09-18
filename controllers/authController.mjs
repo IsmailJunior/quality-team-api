@@ -29,8 +29,24 @@ const createSendToken = (user, statusCode, res) => {
 	});
 };
 
+
 export const signupController = async (req, res, _next) => {
-	const { user } = await signupService(req.body);
+	const {
+		firstName,
+		lastName,
+		username,
+		password,
+		passwordConfirm,
+		passwordChangedAt,
+	} = req.body;
+	const { user } = await signupService({
+		firstName,
+		lastName,
+		username,
+		password,
+		passwordConfirm,
+		passwordChangedAt,
+	});
 	createSendToken(user, 201, res);
 };
 
