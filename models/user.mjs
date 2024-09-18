@@ -70,10 +70,13 @@ const userSchema = new Schema(
 );
 
 userSchema.virtual('profile').get(function () {
-	return this.hypermedia.url.replace(
-		'/upload',
-		'/upload/w_200,h_200,c_thumb,r_max/q_auto/f_auto',
-	);
+	if (this.hypermedia) {
+		return this.hypermedia.url.replace(
+			'/upload',
+			'/upload/w_200,h_200,c_thumb,r_max/q_auto/f_auto',
+		);
+	}
+	return undefined;
 });
 
 userSchema.virtual('createdAtLocale').get(function () {
