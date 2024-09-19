@@ -54,7 +54,16 @@ export const findUserWithPasswordByIdService = async (dto) => {
 
 export const updateMeService = async (dto) => {
 	const { id, body } = dto;
-	const hypermedia = await Hypermedia.create({ url: body.photo });
+	let hypermedia;
+	const currentUser = await User.findById(id);
+	if (currentUser.hypermedia && body.photo) {
+		hypermedia = await Hypermedia.findByIdAndUpdate(
+			currentUser.hypermedia._id,
+			{ url: body.photo },
+		);
+	} else if (body.photo) {
+		hypermedia = await Hypermedia.create({ url: body.photo });
+	}
 	const user = await User.findByIdAndUpdate(
 		id,
 		{ ...body, hypermedia },

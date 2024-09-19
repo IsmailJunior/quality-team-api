@@ -17,7 +17,7 @@ export const findDocByIdController = (service) => async (req, res, next) => {
 export const findDocsController = (service) => async (req, res, _next) => {
 	const { query } = req;
 	const { docs } = await service(query);
-	res.header('Cashe-Control', 'private, max-age=90').status(200).json({
+	res.status(200).json({
 		status: 'success',
 		results: docs.length,
 		data: {
