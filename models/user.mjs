@@ -10,19 +10,19 @@ const userSchema = new Schema(
 		slug: String,
 		firstName: {
 			type: String,
-			required: [true, 'A user must have a first name.'],
+			required: [true, 'Why no first name, Ha?'],
 			minLength: [3, 'Name must be more then 3 characters.'],
 			maxLength: [50, 'Name must be less or equal 50 characters.'],
 		},
 		lastName: {
 			type: String,
-			required: [true, 'A user must have a last name.'],
+			required: [true, 'Why no last name, Ha?'],
 			minLength: [3, 'Name must be more then 3 characters.'],
 			maxLength: [50, 'Name must be less or equal 50 characters.'],
 		},
 		username: {
 			type: String,
-			required: [true, 'A user must have a username.'],
+			required: [true, 'Why no username, Ha?'],
 			trim: true,
 			lowercase: true,
 			unique: true,
@@ -44,13 +44,13 @@ const userSchema = new Schema(
 		},
 		password: {
 			type: String,
-			required: [true, 'Please provide a password.'],
+			required: [true, 'Why no password, Ha?'],
 			minLength: 8,
 			select: false,
 		},
 		passwordConfirm: {
 			type: String,
-			required: [true, 'Please confirm your password.'],
+			required: [true, 'Why not confirming your password, Ha?'],
 			validate: {
 				validator: function (element) {
 					return element === this.password;
@@ -86,6 +86,11 @@ userSchema.virtual('createdAtLocale').get(function () {
 userSchema.virtual('updatedAtLocale').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.updatedAt).format('MMMM Do YYYY, h:mm a');
+});
+
+userSchema.virtual('passwordChangedAtLocale').get(function () {
+	moment.locale('ar-dz');
+	return moment(this.passwordChangedAt).fromNow();
 });
 
 userSchema.virtual('memberSince').get(function () {

@@ -10,6 +10,7 @@ const planSchema = new Schema(
 				values: ['basic', 'standard', 'premium'],
 				message: 'Tier is either basic, standard, or premium.',
 			},
+			unique: true,
 		},
 		description: String,
 		price: {
