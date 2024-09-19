@@ -17,7 +17,9 @@ const router = Router();
 router
 	.route('/signup')
 	.post(uploadUserPhotoMiddleware, catchAsync(signupController));
-router.route('/login').post(catchAsync(loginController));
+router
+	.route('/login')
+	.post(uploadUserPhotoMiddleware, catchAsync(loginController));
 router.route('/forgotPassword').post(catchAsync(forgotPasswordController));
 router
 	.route('/resetPassword/:token')
