@@ -24,6 +24,8 @@ router
 	.patch(catchAsync(resetPasswordController));
 
 router.use(catchAsync(protectRoutetMiddleware));
-router.route('/updatePassword').patch(catchAsync(updatePasswordController));
+router
+	.route('/updatePassword')
+	.patch(uploadUserPhotoMiddleware, catchAsync(updatePasswordController));
 
 export default router;
