@@ -33,7 +33,7 @@ const limiter = rateLimit({
 	message: 'Too many requests from this IP, Please try again in an hour!',
 });
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 
 // Middlewares
 app.use(express.json({ limit: '10kb' }));
