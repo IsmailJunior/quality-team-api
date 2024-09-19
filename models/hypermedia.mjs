@@ -2,7 +2,6 @@ import { Schema, model } from 'mongoose';
 
 const hypermediaSchema = new Schema({
 	url: {
-		required: [true, 'Url cannot be empty.'],
 		type: String,
 		trim: true,
 	},

@@ -23,6 +23,9 @@ export const deleteUserController = deleteDocController(deleteDocService(User));
 
 export const getMeController = findDocByIdController(findDocByIdService(User));
 export const updateMeController = async (req, res, next) => {
+	if (!req.body) {
+		return next(new AppError('Please provide inputs!', 400));
+	}
 	if (req.body.password || req.body.passwordConfirm)
 		return next(
 			new AppError(

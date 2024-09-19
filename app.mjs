@@ -32,17 +32,17 @@ const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000,
 	message: 'Too many requests from this IP, Please try again in an hour!',
 });
-app.use(helmet());
+// app.use(helmet());
 // app.use(limiter);
 
 // Middlewares
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(mongoSanitize());
-app.use(xss());
-app.use(hpp());
-app.use(compression());
+// app.use(express.json({ limit: '10kb' }));
+// app.use(express.urlencoded({ extended: true }));
+// app.use(cors());
+// app.use(mongoSanitize());
+// app.use(xss());
+// app.use(hpp());
+// app.use(compression());
 if (process.env.NODE_ENV !== 'production') {
 	app.use(logger('dev'));
 }

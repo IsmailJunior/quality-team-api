@@ -70,7 +70,7 @@ const userSchema = new Schema(
 );
 
 userSchema.virtual('profile').get(function () {
-	if (this.hypermedia) {
+	if (this.hypermedia && this.hypermedia.url) {
 		return this.hypermedia.url.replace(
 			'/upload',
 			'/upload/w_200,h_200,c_thumb,r_max/q_auto/f_auto',
