@@ -16,7 +16,7 @@ const tierSchema = new Schema({
 });
 
 tierSchema.pre(/^find/, function (next) {
-	this.select('-__v');
+	this.select('-__v').populate({ path: 'contract', select: '-__v' });
 	next();
 });
 
