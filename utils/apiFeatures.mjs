@@ -35,7 +35,7 @@ class APIFeatures {
 		return this;
 	}
 
-	limit() {
+	projection() {
 		// Field limiting
 		if (this.queryString.fields) {
 			const fields = this.queryString.fields.split(',').join(' ');

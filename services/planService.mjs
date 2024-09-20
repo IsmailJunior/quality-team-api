@@ -10,7 +10,7 @@ export const findPlansService = async (dto) => {
 	const features = new APIFeatures(Plan.find(), dto.query)
 		.filter()
 		.sort()
-		.limit()
+		.projection()
 		.paginate();
 
 	const plans = await features.query;

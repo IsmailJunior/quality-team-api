@@ -16,9 +16,9 @@ import globalErrorController from './controllers/errorController.mjs';
 import tourRouter from './routes/tourRoutes.mjs';
 import authRouter from './routes/authRoutes.mjs';
 import userRouter from './routes/userRoutes.mjs';
-import clientRouter from './routes/clientRouter.mjs';
 import planRouter from './routes/planRouter.mjs';
 import tierRouter from './routes/tierRoutes.mjs';
+import contractRouter from './routes/contractRoutes.mjs';
 
 if (process.env.NODE_ENV !== 'production') {
 	dotenv.config();
@@ -51,9 +51,9 @@ if (process.env.NODE_ENV !== 'production') {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/clients', clientRouter);
 app.use('/api/v1/plans', planRouter);
 app.use('/api/v1/tiers', tierRouter);
+app.use('/api/v1/contracts', contractRouter);
 
 app.all('*', (req, _res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

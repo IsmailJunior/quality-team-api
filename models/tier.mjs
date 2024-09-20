@@ -8,10 +8,10 @@ const tierSchema = new Schema({
 		required: [true, 'A tier must have a name.'],
 	},
 	description: String,
-	plan: {
-		required: [true, 'A tier must belong to a plan.'],
+	contract: {
+		required: [true, 'A tier must belong to a contract.'],
 		type: Schema.ObjectId,
-		ref: 'Plan',
+		ref: 'Contract',
 	},
 });
 

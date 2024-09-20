@@ -6,7 +6,7 @@ export const findUsersService = async (dto) => {
 	const features = new APIFeatures(User.find(), dto.query)
 		.filter()
 		.sort()
-		.limit()
+		.projection()
 		.paginate();
 	const users = await features.query;
 	return {

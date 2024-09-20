@@ -65,13 +65,13 @@ export const aliasTopToursMiddleware = (req, _res, next) => {
 	next();
 };
 
-export const setPlanIdToTiersMiddleware = (req, _res, next) => {
-	if (!req.body.plan) req.body.plan = req.params.planId;
+export const setContractIdToTiersMiddleware = (req, _res, next) => {
+	if (!req.body.contract) req.body.contract = req.params.contractId;
 	next();
 };
 
-export const setUserIdToClientMiddleware = (req, _res, next) => {
-	if (!req.body.user) req.body.user = req.user.id;
+export const setUserIdToContractsMiddleware = (req, _res, next) => {
+	if (!req.body.user) req.body.user = req.user._id;
 	next();
 };
 

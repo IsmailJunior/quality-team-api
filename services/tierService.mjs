@@ -6,11 +6,11 @@ export const createTierService = async (dto) => {
 	return { tier };
 };
 
-export const findTiersService = async (planId, query) => {
-	const features = new APIFeatures(Tier.find({ plan: planId }), query)
+export const findTiersService = async (contractId, query) => {
+	const features = new APIFeatures(Tier.find({ contract: contractId }), query)
 		.filter()
 		.sort()
-		.limit()
+		.projection()
 		.paginate();
 
 	const tiers = await features.query;
