@@ -9,7 +9,7 @@ class APIFeatures {
 		const queryObject = { ...this.queryString };
 
 		// Exclude th fields
-		const excludedFields = ['page', 'sort', 'fields', 'limit'];
+		const excludedFields = ['offset', 'sort', 'fields', 'limit'];
 
 		// Remove all the excluded fields
 		excludedFields.forEach((element) => delete queryObject[element]);
@@ -35,7 +35,7 @@ class APIFeatures {
 		return this;
 	}
 
-	projection() {
+	limit() {
 		// Field limiting
 		if (this.queryString.fields) {
 			const fields = this.queryString.fields.split(',').join(' ');
@@ -48,9 +48,9 @@ class APIFeatures {
 
 	paginate() {
 		// Pagination
-		const page = Number(this.queryString.page) || 1;
+		const offset = Number(this.queryString.offset) || 1;
 		const limit = Number(this.queryString.limit) || 10;
-		const skip = (page - 1) * limit;
+		const skip = (offset - 1) * limit;
 		this.query = this.query.skip(skip).limit(limit);
 		return this;
 	}

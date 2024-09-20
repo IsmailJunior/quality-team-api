@@ -12,7 +12,7 @@ export const findDocsService = (Model) => async (query) => {
 	const features = new APIFeatures(Model.find(), query)
 		.filter()
 		.sort()
-		.projection()
+		.limit()
 		.paginate();
 	// Execute Query
 	const docs = await features.query;

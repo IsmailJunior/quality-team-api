@@ -13,7 +13,7 @@ export const getAllToursService = async (dto) => {
 	const features = new APIFeatures(Tour.find(), dto.query)
 		.filter()
 		.sort()
-		.projection()
+		.limit()
 		.paginate();
 	// Execute Query
 	const tours = await features.query;

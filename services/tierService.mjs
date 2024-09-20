@@ -10,7 +10,7 @@ export const findTiersService = async (contractId, query) => {
 	const features = new APIFeatures(Tier.find({ contract: contractId }), query)
 		.filter()
 		.sort()
-		.projection()
+		.limit()
 		.paginate();
 
 	const tiers = await features.query;
