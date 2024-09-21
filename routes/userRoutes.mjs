@@ -10,7 +10,7 @@ import {
 import {
 	protectRoutetMiddleware,
 	getMeMiddleware,
-	uploadUserPhotoMiddleware,
+	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
@@ -22,7 +22,7 @@ router.route('/').get(catchAsync(getUsersController));
 router
 	.route('/me')
 	.get(getMeMiddleware, catchAsync(getMeController))
-	.patch(uploadUserPhotoMiddleware, catchAsync(updateMeController))
+	.patch(uploadPhotoMiddleware, catchAsync(updateMeController))
 	.delete(catchAsync(deleteMeController));
 router
 	.route('/:id')

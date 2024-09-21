@@ -21,6 +21,12 @@ const planSchema = new Schema(
 	},
 );
 
+// planSchema.virtual('perks', {
+// 	ref: 'Perk',
+// 	foreignField: 'plan',
+// 	localField: '_id',
+// });
+
 const Plan = model('Plan', planSchema);
 
 export default Plan;

@@ -8,7 +8,7 @@ import {
 } from '../controllers/authController.mjs';
 import {
 	protectRoutetMiddleware,
-	uploadUserPhotoMiddleware,
+	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
@@ -16,10 +16,8 @@ const router = Router();
 
 router
 	.route('/signup')
-	.post(uploadUserPhotoMiddleware, catchAsync(signupController));
-router
-	.route('/login')
-	.post(uploadUserPhotoMiddleware, catchAsync(loginController));
+	.post(uploadPhotoMiddleware, catchAsync(signupController));
+router.route('/login').post(uploadPhotoMiddleware, catchAsync(loginController));
 router.route('/forgotPassword').post(catchAsync(forgotPasswordController));
 router
 	.route('/resetPassword/:token')
@@ -28,6 +26,6 @@ router
 router.use(catchAsync(protectRoutetMiddleware));
 router
 	.route('/updatePassword')
-	.patch(uploadUserPhotoMiddleware, catchAsync(updatePasswordController));
+	.patch(uploadPhotoMiddleware, catchAsync(updatePasswordController));
 
 export default router;
