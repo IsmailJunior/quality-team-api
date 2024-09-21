@@ -117,7 +117,7 @@ userSchema.pre('save', function (next) {
 
 userSchema.pre('save', async function (next) {
 	const hypermedia = await Hypermedia.create({
-		url: `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${this.firstName}`,
+		url: `https://api.dicebear.com/9.x/fun-emoji/jpg?seed=${this.firstName}`,
 	});
 	this.hypermedia = hypermedia;
 	next();
