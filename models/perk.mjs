@@ -20,6 +20,14 @@ const perkSchema = new Schema({
 	},
 });
 
+perkSchema.pre(/^find/, function (next) {
+	this.select('-__v').populate({
+		path: 'hypermedia',
+		select: '-__v',
+	});
+	next();
+});
+
 const Perk = model('Perk', perkSchema);
 
 export default Perk;

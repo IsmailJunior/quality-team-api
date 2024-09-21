@@ -21,11 +21,18 @@ const planSchema = new Schema(
 	},
 );
 
-// planSchema.virtual('perks', {
-// 	ref: 'Perk',
-// 	foreignField: 'plan',
-// 	localField: '_id',
-// });
+planSchema.pre(/^find/, function (next) {
+	this.select('-__v').populate({
+		path: 'perks',
+		select: '-__v',
+	});
+	next();
+});
+planSchema.virtual('perks', {
+	ref: 'Perk',
+	foreignField: 'plan',
+	localField: '_id',
+});
 
 const Plan = model('Plan', planSchema);
 
