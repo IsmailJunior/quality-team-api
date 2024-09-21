@@ -16,7 +16,7 @@ cloudinary.config({
 export const storage = new CloudinaryStorage({
 	cloudinary,
 	params: {
-		folder: 'users',
+		folder: 'public',
 		allowed_formats: ['jpeg', 'png', 'jpg', 'webp'],
 	},
 });
