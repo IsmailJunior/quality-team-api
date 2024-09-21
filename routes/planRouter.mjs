@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
 	createPlanController,
 	getPlansController,
+	getPlanByIdController,
 } from '../controllers/planController.mjs';
 import perkRouter from './perkRoutes.mjs';
 import {
@@ -20,4 +21,5 @@ router
 	.get(catchAsync(getPlansController))
 	.post(catchAsync(createPlanController));
 
+router.route('/:id').get(catchAsync(getPlanByIdController));
 export default router;
