@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import slugify from 'slugify';
 import moment from 'moment';
+import Hypermedia from './hypermedia.mjs';
 
 const userSchema = new Schema(
 	{
@@ -111,6 +112,14 @@ userSchema.pre(/^find/, function (next) {
 
 userSchema.pre('save', function (next) {
 	this.slug = slugify(`${this.firstName} ${this.lastName}`, { lower: true });
+	next();
+});
+
+userSchema.pre('save', async function (next) {
+	const hypermedia = await Hypermedia.create({
+		url: `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${this.firstName}`,
+	});
+	this.hypermedia = hypermedia;
 	next();
 });
 
