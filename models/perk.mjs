@@ -1,24 +1,30 @@
 import { Schema, model } from 'mongoose';
 
-const perkSchema = new Schema({
-	title: {
-		type: String,
-		required: [true, 'A perk must have a name.'],
+const perkSchema = new Schema(
+	{
+		title: {
+			type: String,
+			required: [true, 'A perk must have a name.'],
+		},
+		description: {
+			type: String,
+			required: [true, 'A perk must have a description.'],
+		},
+		plan: {
+			required: [true, 'A perk must have a description.'],
+			type: Schema.ObjectId,
+			ref: 'Hypermedia',
+		},
+		hypermedia: {
+			type: Schema.ObjectId,
+			ref: 'Hypermedia',
+		},
 	},
-	description: {
-		type: String,
-		required: [true, 'A perk must have a description.'],
+	{
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true },
 	},
-	plan: {
-		required: [true, 'A perk must have a description.'],
-		type: Schema.ObjectId,
-		ref: 'Hypermedia',
-	},
-	hypermedia: {
-		type: Schema.ObjectId,
-		ref: 'Hypermedia',
-	},
-});
+);
 
 perkSchema.virtual('icon').get(function () {
 	if (this.hypermedia && this.hypermedia.url) {
