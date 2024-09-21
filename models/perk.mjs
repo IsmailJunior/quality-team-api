@@ -20,6 +20,13 @@ const perkSchema = new Schema({
 	},
 });
 
+perkSchema.virtual('icon').get(function () {
+	if (this.hypermedia && this.hypermedia.url) {
+		return this.hypermedia.url.replace('/upload', '/upload/w_500,h_500,c_fill');
+	}
+	return undefined;
+});
+
 perkSchema.pre(/^find/, function (next) {
 	this.select('-__v').populate({
 		path: 'hypermedia',
