@@ -8,6 +8,8 @@ import perkRouter from './perkRoutes.mjs';
 import {
 	protectRoutetMiddleware,
 	setPlanIdToPerksMiddleware,
+	setPhotoPathToBodyMiddleware,
+	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
@@ -19,7 +21,11 @@ router.use('/:planId/perks', setPlanIdToPerksMiddleware, perkRouter);
 router
 	.route('/')
 	.get(catchAsync(getPlansController))
-	.post(catchAsync(createPlanController));
+	.post(
+		uploadPhotoMiddleware,
+		setPhotoPathToBodyMiddleware,
+		catchAsync(createPlanController),
+	);
 
 router.route('/:id').get(catchAsync(getPlanByIdController));
 export default router;

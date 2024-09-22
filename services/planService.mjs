@@ -1,8 +1,10 @@
 import Plan from '../models/plan.mjs';
+import Hypermedia from '../models/hypermedia.mjs';
 import APIFeatures from '../utils/apiFeatures.mjs';
 
 export const createPlanService = async (dto) => {
-	const plan = await Plan.create(dto);
+	const hypermedia = await Hypermedia.create({ url: dto.photo });
+	const plan = await Plan.create({ ...dto, hypermedia });
 	return { plan };
 };
 

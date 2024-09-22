@@ -7,6 +7,7 @@ import {
 	protectRoutetMiddleware,
 	setUserIdToContractsMiddleware,
 	setContractIdToTiersMiddleware,
+	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import tierRouter from './tierRoutes.mjs';
@@ -19,6 +20,10 @@ router.use('/:contractId/tiers', setContractIdToTiersMiddleware, tierRouter);
 router
 	.route('/')
 	.get(catchAsync(getContractsController))
-	.post(setUserIdToContractsMiddleware, catchAsync(createContractController));
+	.post(
+		uploadPhotoMiddleware,
+		setUserIdToContractsMiddleware,
+		catchAsync(createContractController),
+	);
 
 export default router;

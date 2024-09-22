@@ -83,3 +83,10 @@ export const getMeMiddleware = (req, _res, next) => {
 	req.params.id = req.user.id;
 	next();
 };
+
+export const setPhotoPathToBodyMiddleware = (req, _res, next) => {
+	if (req.file) req.body.photo = req.file.path;
+	if (!req.body.photo)
+		return next(new AppError('Please provide a photo.', 400));
+	next();
+};

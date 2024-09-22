@@ -14,6 +14,10 @@ const planSchema = new Schema(
 			unique: true,
 		},
 		description: String,
+		hypermedia: {
+			type: Schema.ObjectId,
+			ref: 'Hypermedia',
+		},
 	},
 	{
 		toJSON: { virtuals: true },
@@ -22,12 +26,25 @@ const planSchema = new Schema(
 );
 
 planSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({
-		path: 'perks',
-		select: '-__v',
-	});
+	this.select('-__v')
+		.populate({
+			path: 'perks',
+			select: '-__v',
+		})
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		});
 	next();
 });
+
+planSchema.virtual('icon').get(function () {
+	if (this.hypermedia && this.hypermedia.url) {
+		return this.hypermedia.url.replace('/upload', '/upload/w_500,h_500,c_fit');
+	}
+	return undefined;
+});
+
 planSchema.virtual('perks', {
 	ref: 'Perk',
 	foreignField: 'plan',

@@ -11,9 +11,9 @@ const perkSchema = new Schema(
 			required: [true, 'A perk must have a description.'],
 		},
 		plan: {
-			required: [true, 'A perk must have a description.'],
+			required: [true, 'A perk must have a plan.'],
 			type: Schema.ObjectId,
-			ref: 'Hypermedia',
+			ref: 'Plan',
 		},
 		hypermedia: {
 			type: Schema.ObjectId,
