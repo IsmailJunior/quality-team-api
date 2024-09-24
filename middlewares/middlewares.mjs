@@ -65,7 +65,7 @@ export const aliasTopToursMiddleware = (req, _res, next) => {
 	next();
 };
 
-export const setContractIdToTiersMiddleware = (req, _res, next) => {
+export const setSubscriptionIdToTiersMiddleware = (req, _res, next) => {
 	if (!req.body.contract) req.body.contract = req.params.contractId;
 	next();
 };

@@ -8,9 +8,9 @@ export const createTierController = createDocController(createDocService(Tier));
 export const getTiersController = async (req, res, _next) => {
 	const {
 		query,
-		params: { contractId },
+		params: { subscriptionId },
 	} = req;
-	const { tiers } = await findTiersService(contractId, query);
+	const { tiers } = await findTiersService(subscriptionId, query);
 	res.status(200).json({
 		status: 'success',
 		results: tiers.length,

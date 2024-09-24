@@ -6,7 +6,7 @@ import {
 import {
 	protectRoutetMiddleware,
 	setUserIdToContractsMiddleware,
-	setContractIdToTiersMiddleware,
+	setSubscriptionIdToTiersMiddleware,
 	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
@@ -15,7 +15,11 @@ import tierRouter from './tierRoutes.mjs';
 const router = Router();
 
 router.use(catchAsync(protectRoutetMiddleware));
-router.use('/:contractId/tiers', setContractIdToTiersMiddleware, tierRouter);
+router.use(
+	'/:subscriptionId/tiers',
+	setSubscriptionIdToTiersMiddleware,
+	tierRouter,
+);
 
 router
 	.route('/')

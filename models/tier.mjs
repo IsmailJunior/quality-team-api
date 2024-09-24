@@ -8,15 +8,15 @@ const tierSchema = new Schema({
 		required: [true, 'A tier must have a name.'],
 	},
 	description: String,
-	contract: {
-		required: [true, 'A tier must belong to a contract.'],
+	subscription: {
+		required: [true, 'A tier must belong to a subscription.'],
 		type: Schema.ObjectId,
-		ref: 'Contract',
+		ref: 'Subscription',
 	},
 });
 
 tierSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({ path: 'contract', select: '-__v' });
+	this.select('-__v').populate({ path: 'subscription', select: '-__v' });
 	next();
 });
 
