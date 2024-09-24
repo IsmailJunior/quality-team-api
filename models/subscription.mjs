@@ -1,8 +1,7 @@
 import { Schema, model } from 'mongoose';
-import slugify from 'slugify';
 import moment from 'moment';
 
-const contractSchema = new Schema(
+const subscriptionSchema = new Schema(
 	{
 		price: {
 			type: Number,
@@ -35,12 +34,12 @@ const contractSchema = new Schema(
 	},
 );
 
-contractSchema.virtual('expireDate').get(function () {
+subscriptionSchema.virtual('expireDate').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.endDate).fromNow();
 });
 
-contractSchema.pre(/^find/, function (next) {
+subscriptionSchema.pre(/^find/, function (next) {
 	this.select('-__v')
 		.populate({
 			path: 'plan',
@@ -53,6 +52,6 @@ contractSchema.pre(/^find/, function (next) {
 	next();
 });
 
-const Contract = model('Contract', contractSchema);
+const Contract = model('Subscription', subscriptionSchema);
 
 export default Contract;

@@ -18,7 +18,7 @@ import authRouter from './routes/authRoutes.mjs';
 import userRouter from './routes/userRoutes.mjs';
 import planRouter from './routes/planRouter.mjs';
 import tierRouter from './routes/tierRoutes.mjs';
-import contractRouter from './routes/contractRoutes.mjs';
+import subscriptionRouter from './routes/subscriptionRoutes.mjs';
 import perkRouter from './routes/perkRoutes.mjs';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -54,7 +54,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/plans', planRouter);
 app.use('/api/v1/tiers', tierRouter);
-app.use('/api/v1/contracts', contractRouter);
+app.use('/api/v1/subscriptions', subscriptionRouter);
 app.use('/api/v1/perks', perkRouter);
 
 app.all('*', (req, _res, next) => {

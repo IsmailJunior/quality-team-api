@@ -10,11 +10,6 @@ const perkSchema = new Schema(
 			type: String,
 			required: [true, 'A perk must have a description.'],
 		},
-		plan: {
-			required: [true, 'A perk must have a plan.'],
-			type: Schema.ObjectId,
-			ref: 'Plan',
-		},
 		hypermedia: {
 			type: Schema.ObjectId,
 			ref: 'Hypermedia',

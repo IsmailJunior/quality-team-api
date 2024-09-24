@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import {
-	createContractController,
-	getContractsController,
-} from '../controllers/contractController.mjs';
+	createSubscriptionController,
+	getSubscriptionController,
+} from '../controllers/subscriptionController.mjs';
 import {
 	protectRoutetMiddleware,
 	setUserIdToContractsMiddleware,
@@ -19,11 +19,11 @@ router.use('/:contractId/tiers', setContractIdToTiersMiddleware, tierRouter);
 
 router
 	.route('/')
-	.get(catchAsync(getContractsController))
+	.get(catchAsync(getSubscriptionController))
 	.post(
 		uploadPhotoMiddleware,
 		setUserIdToContractsMiddleware,
-		catchAsync(createContractController),
+		catchAsync(createSubscriptionController),
 	);
 
 export default router;
