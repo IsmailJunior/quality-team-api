@@ -39,6 +39,7 @@ const contentSchema = new Schema(
 			ref: 'Hypermedia',
 		},
 		tier: {
+			required: [true, 'A content must belong to a tier.'],
 			type: Schema.ObjectId,
 			ref: 'Tier',
 		},

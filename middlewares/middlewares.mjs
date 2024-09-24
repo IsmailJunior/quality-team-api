@@ -74,6 +74,11 @@ export const setPlanIdToPerksMiddleware = (req, _res, next) => {
 	next();
 };
 
+export const setTierIdToContentMiddleware = (req, _res, next) => {
+	if (!req.body.tier) req.body.tier = req.params.tierId;
+	next();
+};
+
 export const setUserIdToContractsMiddleware = (req, _res, next) => {
 	if (!req.body.user) req.body.user = req.user._id;
 	next();
