@@ -66,7 +66,7 @@ export const aliasTopToursMiddleware = (req, _res, next) => {
 };
 
 export const setSubscriptionIdToTiersMiddleware = (req, _res, next) => {
-	if (!req.body.contract) req.body.contract = req.params.contractId;
+	if (!req.body.subscription) req.body.subscription = req.params.subscriptionId;
 	next();
 };
 export const setPlanIdToPerksMiddleware = (req, _res, next) => {
