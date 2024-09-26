@@ -40,15 +40,10 @@ subscriptionSchema.virtual('expireDate').get(function () {
 });
 
 subscriptionSchema.pre(/^find/, function (next) {
-	this.select('-__v')
-		.populate({
-			path: 'plan',
-			select: '-__v',
-		})
-		.populate({
-			path: 'user',
-			select: '-__v',
-		});
+	this.select('-__v').populate({
+		path: 'plan',
+		select: '-__v',
+	});
 	next();
 });
 
