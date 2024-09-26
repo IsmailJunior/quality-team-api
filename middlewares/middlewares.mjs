@@ -69,6 +69,7 @@ export const setSubscriptionIdToTiersMiddleware = (req, _res, next) => {
 	if (!req.body.subscription) req.body.subscription = req.params.subscriptionId;
 	next();
 };
+
 export const setPlanIdToPerksMiddleware = (req, _res, next) => {
 	if (!req.body.plan) req.body.plan = req.params.planId;
 	next();
@@ -79,7 +80,7 @@ export const setTierIdToContentMiddleware = (req, _res, next) => {
 	next();
 };
 
-export const setUserIdToContractsMiddleware = (req, _res, next) => {
+export const setUserIdToSubscriptionMiddleware = (req, _res, next) => {
 	if (!req.body.user) req.body.user = req.user._id;
 	next();
 };

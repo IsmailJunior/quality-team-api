@@ -5,7 +5,7 @@ import {
 } from '../controllers/subscriptionController.mjs';
 import {
 	protectRoutetMiddleware,
-	setUserIdToContractsMiddleware,
+	setUserIdToSubscriptionMiddleware,
 	setSubscriptionIdToTiersMiddleware,
 	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
@@ -26,7 +26,7 @@ router
 	.get(catchAsync(getSubscriptionController))
 	.post(
 		uploadPhotoMiddleware,
-		setUserIdToContractsMiddleware,
+		setUserIdToSubscriptionMiddleware,
 		catchAsync(createSubscriptionController),
 	);
 
