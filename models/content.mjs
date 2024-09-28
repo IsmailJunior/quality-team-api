@@ -60,7 +60,7 @@ contentSchema.virtual('updatedAtLocale').get(function () {
 	return moment(this.updatedAt).format('MMMM Do YYYY, h:mm a');
 });
 
-contentSchema.virtual('photo', function () {
+contentSchema.virtual('photo').get(function () {
 	if (this.hypermedia && this.hypermedia.url) {
 		return this.hypermedia.url;
 	}
