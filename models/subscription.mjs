@@ -47,6 +47,6 @@ subscriptionSchema.pre(/^find/, function (next) {
 	next();
 });
 
-const Contract = model('Subscription', subscriptionSchema);
+const Subscription = model('Subscription', subscriptionSchema);
 
-export default Contract;
+export default Subscription;

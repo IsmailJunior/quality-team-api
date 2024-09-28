@@ -21,6 +21,7 @@ import planRouter from './routes/planRouter.mjs';
 import tierRouter from './routes/tierRoutes.mjs';
 import subscriptionRouter from './routes/subscriptionRoutes.mjs';
 import perkRouter from './routes/perkRoutes.mjs';
+import requestRouter from './routes/requestRoutes.mjs';
 
 if (process.env.NODE_ENV !== 'production') {
 	dotenv.config();
@@ -58,6 +59,7 @@ app.use('/api/v1/tiers', tierRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
 app.use('/api/v1/perks', perkRouter);
 app.use('/api/v1/contents', contentRouter);
+app.use('/api/v1/requests', requestRouter);
 
 app.all('*', (req, _res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
