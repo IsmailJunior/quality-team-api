@@ -7,6 +7,7 @@ import {
 	protectRoutetMiddleware,
 	uploadPhotoMiddleware,
 	setTierIdToContentMiddleware,
+	isUserSubsecribedMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import contentRouter from './contentRoutes.mjs';
@@ -17,7 +18,7 @@ router.use(catchAsync(protectRoutetMiddleware));
 router.use('/:tierId/contents', setTierIdToContentMiddleware, contentRouter);
 router
 	.route('/')
-	.get(catchAsync(getTiersController))
+	.get(isUserSubsecribedMiddleware, catchAsync(getTiersController))
 	.post(uploadPhotoMiddleware, catchAsync(createTierController));
 
 export default router;

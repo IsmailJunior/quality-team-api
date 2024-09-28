@@ -96,3 +96,9 @@ export const setPhotoPathToBodyMiddleware = (req, _res, next) => {
 		return next(new AppError('Please provide a photo.', 400));
 	next();
 };
+
+export const isUserSubsecribedMiddleware = (req, _res, next) => {
+	if (req.user.subscriptions.length === 0)
+		return next(new AppError('Please Subsecribe.', 401));
+	next();
+};
