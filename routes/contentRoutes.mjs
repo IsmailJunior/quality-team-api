@@ -13,6 +13,7 @@ const router = Router({ mergeParams: true });
 
 router.use(catchAsync(protectRoutetMiddleware));
 
+
 router
 	.route('/')
 	.get(catchAsync(getContentsController))

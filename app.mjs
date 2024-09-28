@@ -13,6 +13,7 @@ import compression from 'compression';
 import AppError from './utils/appError.mjs';
 import globalErrorController from './controllers/errorController.mjs';
 
+import contentRouter from './routes/contentRoutes.mjs';
 import tourRouter from './routes/tourRoutes.mjs';
 import authRouter from './routes/authRoutes.mjs';
 import userRouter from './routes/userRoutes.mjs';
@@ -56,6 +57,7 @@ app.use('/api/v1/plans', planRouter);
 app.use('/api/v1/tiers', tierRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
 app.use('/api/v1/perks', perkRouter);
+app.use('/api/v1/contents', contentRouter);
 
 app.all('*', (req, _res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

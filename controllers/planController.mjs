@@ -1,5 +1,4 @@
 import {
-	createDocController,
 	findDocsController,
 	findDocByIdController,
 } from './controllerFactory.mjs';

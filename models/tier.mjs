@@ -16,8 +16,17 @@ const tierSchema = new Schema({
 });
 
 tierSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({ path: 'subscription', select: '-__v' });
+	this.select('-__v').populate({
+		path: 'contents',
+		select: '-__v',
+	});
 	next();
+});
+
+tierSchema.virtual('contents', {
+	ref: 'Content',
+	foreignField: 'tier',
+	localField: '_id',
 });
 
 tierSchema.pre('save', function (next) {

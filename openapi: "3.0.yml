@@ -1,0 +1,76 @@
+openapi: "3.0.3"
+info:
+  title: Quality API
+  version: "1.0"
+servers:
+  - url: https://quality-ad-api.onrender.com/api/v1
+paths:
+  /users/{id}:
+    parameters:
+      - $ref: "#parameters/IdInPath"
+    get:
+      operationId: getUsersById
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/User"
+                  
+security:
+  - basicAuth: []
+
+components:
+  schemas:
+    User:
+      required:
+        - firstName
+        - lastName
+        - username
+        - password
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        username:
+          type: string
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+        password:
+          type: string
+          minLength: 8
+          maxLength: 16
+        passwordConfirm:
+          type: string
+        passwordChangedAt:
+          type: string
+        passwordResetToken:
+          type: string
+        passwordResetExpires:
+          type: string
+        active:
+          type: boolean
+        createdAt:
+          type: string
+        hypermedia:
+          type: string
+          items:
+            $ref: "#/components/schemas/Hypermedia"
+    Hypermedia:
+      properties:
+        url:
+          type: string
+  parameters:
+    IdInPath:
+      schema:
+        type: string
+      name: id
+      in: path
+      required: true
