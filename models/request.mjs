@@ -3,12 +3,12 @@ import { Schema, model } from 'mongoose';
 const requestSchema = new Schema(
 	{
 		plan: {
-			required: [true, 'A contract must have a plan.'],
+			required: [true, 'A request must have a plan.'],
 			type: Schema.ObjectId,
 			ref: 'Plan',
 		},
 		user: {
-			required: [true, 'A contract must have a user.'],
+			required: [true, 'A request must have a user.'],
 			type: Schema.ObjectId,
 			ref: 'User',
 		},

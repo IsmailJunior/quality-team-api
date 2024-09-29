@@ -34,6 +34,12 @@ const subscriptionSchema = new Schema(
 	},
 );
 
+subscriptionSchema.virtual('contents', {
+	ref: 'Content',
+	foreignField: 'subscription',
+	localField: '_id',
+});
+
 subscriptionSchema.virtual('expireDate').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.endDate).fromNow();

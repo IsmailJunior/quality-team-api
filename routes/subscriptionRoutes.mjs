@@ -1,33 +1,31 @@
 import { Router } from 'express';
 import {
 	createSubscriptionController,
+	getSubscriptionsController,
 	getSubscriptionController,
 } from '../controllers/subscriptionController.mjs';
 import {
 	protectRoutetMiddleware,
 	setUserIdToSubscriptionMiddleware,
-	setSubscriptionIdToTiersMiddleware,
 	uploadPhotoMiddleware,
 } from '../middlewares/middlewares.mjs';
+import contentRouter from './contentRoutes.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
-import tierRouter from './tierRoutes.mjs';
 
 const router = Router();
 
 router.use(catchAsync(protectRoutetMiddleware));
-router.use(
-	'/:subscriptionId/tiers',
-	setSubscriptionIdToTiersMiddleware,
-	tierRouter,
-);
+router.use('/:subscriptionId/contents', contentRouter);
 
 router
 	.route('/')
-	.get(catchAsync(getSubscriptionController))
+	.get(catchAsync(getSubscriptionsController))
 	.post(
 		uploadPhotoMiddleware,
 		setUserIdToSubscriptionMiddleware,
 		catchAsync(createSubscriptionController),
 	);
+
+router.route('/:id').get(catchAsync(getSubscriptionController));
 
 export default router;

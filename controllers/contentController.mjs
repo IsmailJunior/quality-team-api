@@ -1,7 +1,7 @@
-import { findDocsController } from './controllerFactory.mjs';
-import { findDocsService } from '../services/serviceFactory.mjs';
-import createContentService from '../services/contentService.mjs';
-import Content from '../models/content.mjs';
+import {
+	createContentService,
+	findContentsByTierService,
+} from '../services/contentService.mjs';
 
 export const createContentController = async (req, res, _next) => {
 	const { body } = req;
@@ -14,6 +14,14 @@ export const createContentController = async (req, res, _next) => {
 	});
 };
 
-export const getContentsController = findDocsController(
-	findDocsService(Content),
-);
+export const getContentsController = async (req, res, _next) => {
+	const { params: subscriptionId } = req;
+	const { contents } = await findContentsByTierService(subscriptionId);
+	res.status(200).json({
+		status: 'success',
+		results: contents.length,
+		data: {
+			contents,
+		},
+	});
+};

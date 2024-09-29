@@ -65,18 +65,13 @@ export const aliasTopToursMiddleware = (req, _res, next) => {
 	next();
 };
 
-export const setSubscriptionIdToTiersMiddleware = (req, _res, next) => {
-	if (!req.body.subscription) req.body.subscription = req.params.subscriptionId;
-	next();
-};
-
 export const setPlanIdToPerksMiddleware = (req, _res, next) => {
 	if (!req.body.plan) req.body.plan = req.params.planId;
 	next();
 };
 
-export const setTierIdToContentMiddleware = (req, _res, next) => {
-	if (!req.body.tier) req.body.tier = req.params.tierId;
+export const setSubscriptionIdToContentMiddleware = (req, _res, next) => {
+	if (!req.body.subscription) req.body.subscription = req.params.subscriptionId;
 	next();
 };
 

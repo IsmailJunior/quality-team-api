@@ -38,10 +38,10 @@ const contentSchema = new Schema(
 			type: Schema.ObjectId,
 			ref: 'Hypermedia',
 		},
-		tier: {
+		subscription: {
 			required: [true, 'A content must belong to a tier.'],
 			type: Schema.ObjectId,
-			ref: 'Tier',
+			ref: 'Subscription',
 		},
 	},
 	{

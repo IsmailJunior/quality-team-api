@@ -1,10 +1,15 @@
 import Content from '../models/content.mjs';
 import Hypermedia from '../models/hypermedia.mjs';
 
-const createContentService = async (dto) => {
+export const createContentService = async (dto) => {
 	const hypermedia = await Hypermedia.create({ url: dto.photo });
 	const content = await Content.create({ ...dto, hypermedia });
 	return { content };
 };
 
-export default createContentService;
+export const findContentsByTierService = async (dto) => {
+	const contents = await Content.find({ subscription: dto.subscriptionId });
+	return {
+		contents,
+	};
+};
