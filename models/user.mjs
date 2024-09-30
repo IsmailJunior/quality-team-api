@@ -80,6 +80,12 @@ userSchema.virtual('profile').get(function () {
 	return undefined;
 });
 
+userSchema.virtual('subscription', {
+	ref: 'Subscription',
+	foreignField: 'user',
+	localField: '_id',
+});
+
 userSchema.virtual('createdAtLocale').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.createdAt).format('MMMM Do YYYY, h:mm a');
@@ -105,6 +111,10 @@ userSchema.pre(/^find/, function (next) {
 		.select('-__v')
 		.populate({
 			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'subscription',
 			select: '-__v',
 		});
 	next();
