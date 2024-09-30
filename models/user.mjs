@@ -80,7 +80,7 @@ userSchema.virtual('profile').get(function () {
 	return undefined;
 });
 
-userSchema.virtual('subscription', {
+userSchema.virtual('subscriptions', {
 	ref: 'Subscription',
 	foreignField: 'user',
 	localField: '_id',
@@ -114,7 +114,7 @@ userSchema.pre(/^find/, function (next) {
 			select: '-__v',
 		})
 		.populate({
-			path: 'subscription',
+			path: 'subscriptions',
 			select: '-__v',
 		});
 	next();
