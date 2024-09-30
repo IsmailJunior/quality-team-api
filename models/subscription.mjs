@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import moment from 'moment';
+import Content from './content.mjs';
+import { cloudinary } from '../config/cloudinary.mjs';
 
 const subscriptionSchema = new Schema(
 	{
@@ -34,6 +36,19 @@ const subscriptionSchema = new Schema(
 	},
 );
 
+subscriptionSchema.post('findOneAndDelete', async function (doc) {
+	if (doc) {
+		const contents = await Content.find({ subscription: doc._id });
+		await Promise.all(
+			contents.map(
+				async (element) =>
+					await cloudinary.uploader.destroy(element.hypermedia.filename),
+			),
+		);
+		await Content.deleteMany({ subscription: doc._id });
+	}
+});
+
 subscriptionSchema.virtual('contents', {
 	ref: 'Content',
 	foreignField: 'subscription',
@@ -43,14 +58,6 @@ subscriptionSchema.virtual('contents', {
 subscriptionSchema.virtual('expireDate').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.endDate).fromNow();
-});
-
-subscriptionSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({
-		path: 'plan',
-		select: '-__v',
-	});
-	next();
 });
 
 const Subscription = model('Subscription', subscriptionSchema);

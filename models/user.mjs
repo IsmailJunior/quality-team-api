@@ -99,22 +99,12 @@ userSchema.virtual('memberSince').get(function () {
 	return moment(this.createdAt).fromNow();
 });
 
-userSchema.virtual('subscriptions', {
-	ref: 'Subscription',
-	foreignField: 'user',
-	localField: '_id',
-});
-
 userSchema.pre(/^find/, function (next) {
 	this.select('-__v')
 		.find({ active: { $ne: false } })
 		.select('-__v')
 		.populate({
 			path: 'hypermedia',
-			select: '-__v',
-		})
-		.populate({
-			path: 'subscriptions',
 			select: '-__v',
 		});
 	next();

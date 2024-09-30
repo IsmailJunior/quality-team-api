@@ -56,13 +56,16 @@ export const updateMeService = async (dto) => {
 	const { id, body } = dto;
 	let hypermedia;
 	const currentUser = await User.findById(id);
-	if (currentUser.hypermedia && body.photo) {
+	if (currentUser.hypermedia && body.photo && body.filename) {
 		hypermedia = await Hypermedia.findByIdAndUpdate(
 			currentUser.hypermedia._id,
-			{ url: body.photo },
+			{ url: body.photo, filename: body.filename },
 		);
-	} else if (body.photo) {
-		hypermedia = await Hypermedia.create({ url: body.photo });
+	} else if (body.photo && body.filename) {
+		hypermedia = await Hypermedia.create({
+			url: body.photo,
+			filename: body.filename,
+		});
 	}
 	const user = await User.findByIdAndUpdate(
 		id,

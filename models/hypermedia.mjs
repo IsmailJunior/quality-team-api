@@ -5,6 +5,10 @@ const hypermediaSchema = new Schema({
 		type: String,
 		trim: true,
 	},
+	filename: {
+		type: String,
+		trim: true,
+	},
 });
 
 hypermediaSchema.pre(/^find/, function (next) {

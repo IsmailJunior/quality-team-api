@@ -8,7 +8,10 @@ export const createPerkController = async (req, res, next) => {
 	if (!req.body) {
 		return next(new AppError('Please provide inputs!', 400));
 	}
-	if (req.file) req.body.photo = req.file.path;
+	if (req.file) {
+		req.body.photo = req.file.path;
+		req.body.filename = req.file.filename;
+	}
 	if (!req.body.photo)
 		return next(new AppError('Please provide a photo.', 400));
 	const { perk } = await createPerkService(req.body);

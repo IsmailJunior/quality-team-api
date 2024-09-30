@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import slugify from 'slugify';
 import moment from 'moment';
+import { cloudinary } from '../config/cloudinary.mjs';
 
 const contentSchema = new Schema(
 	{
@@ -78,6 +79,12 @@ contentSchema.pre(/^find/, function (next) {
 contentSchema.pre('save', function (next) {
 	this.slug = slugify(this.name, { lower: true });
 	next();
+});
+
+contentSchema.post('findOneAndDelete', async function (doc) {
+	if (doc) {
+		await cloudinary.uploader.destroy(doc.hypermedia.filename);
+	}
 });
 
 const Content = model('Content', contentSchema);

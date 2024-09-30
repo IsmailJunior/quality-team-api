@@ -11,6 +11,10 @@ import Plan from '../models/plan.mjs';
 
 export const createPlanController = async (req, res, _next) => {
 	const { body } = req;
+	if (req.file) {
+		body.photo = req.file.path;
+		body.filename = req.file.filename;
+	}
 	const { plan } = await createPlanService(body);
 	res.status(201).json({
 		status: 'success',

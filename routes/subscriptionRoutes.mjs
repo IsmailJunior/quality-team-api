@@ -3,6 +3,8 @@ import {
 	createSubscriptionController,
 	getSubscriptionsController,
 	getSubscriptionController,
+	updateSubscriptionController,
+	deleteSubscriptionController,
 } from '../controllers/subscriptionController.mjs';
 import {
 	protectRoutetMiddleware,
@@ -26,6 +28,10 @@ router
 		catchAsync(createSubscriptionController),
 	);
 
-router.route('/:id').get(catchAsync(getSubscriptionController));
+router
+	.route('/:id')
+	.patch(catchAsync(updateSubscriptionController))
+	.get(catchAsync(getSubscriptionController))
+	.delete(catchAsync(deleteSubscriptionController));
 
 export default router;

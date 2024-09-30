@@ -2,6 +2,9 @@ import { Router } from 'express';
 import {
 	createContentController,
 	getContentsController,
+	deleteContentController,
+	getContentController,
+	updateContentController,
 } from '../controllers/contentController.mjs';
 import statsController from '../controllers/statsController.mjs';
 import {
@@ -25,5 +28,11 @@ router
 		setSubscriptionIdToContentMiddleware,
 		catchAsync(createContentController),
 	);
+
+router
+	.route('/:id')
+	.get(catchAsync(getContentController))
+	.patch(catchAsync(updateContentController))
+	.delete(catchAsync(deleteContentController));
 
 export default router;

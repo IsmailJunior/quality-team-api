@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-
+import Perk from './perk.mjs';
 const planSchema = new Schema(
 	{
 		tier: {
