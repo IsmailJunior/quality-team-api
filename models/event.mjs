@@ -32,6 +32,14 @@ eventSchema.virtual('photo').get(function () {
 		return this.hypermedia.url;
 	}
 	return undefined;
+} );
+
+eventSchema.pre(/^find/, function (next) {
+	this.select('-__v').populate({
+		path: 'hypermedia',
+		select: '-__v',
+	});
+	next();
 });
 
 eventSchema.post('findOneAndDelete', async function (doc) {
