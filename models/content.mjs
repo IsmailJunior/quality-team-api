@@ -36,6 +36,7 @@ const contentSchema = new Schema(
 			default: 'idle',
 		},
 		hypermedia: {
+			required: [true, 'A content must have a hypermedia.'],
 			type: Schema.ObjectId,
 			ref: 'Hypermedia',
 		},

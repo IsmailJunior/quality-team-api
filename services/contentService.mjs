@@ -1,17 +1,11 @@
-import { ObjectId } from 'bson';
 import Content from '../models/content.mjs';
 import Hypermedia from '../models/hypermedia.mjs';
 
 export const createContentService = async (dto) => {
-	let hypermedia;
-	if (dto.photo && dto.filename) {
-		hypermedia = await Hypermedia.create({
-			url: dto.photo,
-			filename: dto.filename,
-		});
-	} else {
-		hypermedia = new ObjectId('66fb82cdf0d8c3c84ee7f44a');
-	}
+	const hypermedia = await Hypermedia.create({
+		url: dto.photo,
+		filename: dto.filename,
+	});
 	const content = await Content.create({ ...dto, hypermedia });
 	return { content };
 };
