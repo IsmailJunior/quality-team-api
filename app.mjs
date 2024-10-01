@@ -21,6 +21,7 @@ import planRouter from './routes/planRouter.mjs';
 import subscriptionRouter from './routes/subscriptionRoutes.mjs';
 import perkRouter from './routes/perkRoutes.mjs';
 import requestRouter from './routes/requestRoutes.mjs';
+import eventRouter from './routes/eventRoutes.mjs';
 
 if (process.env.NODE_ENV !== 'production') {
 	dotenv.config();
@@ -34,17 +35,17 @@ const limiter = rateLimit({
 	windowMs: 60 * 60 * 1000,
 	message: 'Too many requests from this IP, Please try again in an hour!',
 });
-app.use(helmet());
+// app.use(helmet());
 // app.use(limiter);
 
 // Middlewares
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(mongoSanitize());
-app.use(xss());
-app.use(hpp());
-app.use(compression());
+// app.use(cors());
+// app.use(mongoSanitize());
+// app.use(xss());
+// app.use(hpp());
+// app.use(compression());
 if (process.env.NODE_ENV !== 'production') {
 	app.use(logger('dev'));
 }
@@ -58,6 +59,7 @@ app.use('/api/v1/subscriptions', subscriptionRouter);
 app.use('/api/v1/perks', perkRouter);
 app.use('/api/v1/contents', contentRouter);
 app.use('/api/v1/requests', requestRouter);
+app.use('/api/v1/events', eventRouter);
 
 app.all('*', (req, _res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

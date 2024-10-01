@@ -1,4 +1,6 @@
-const globalErrorController = (err, req, res, _next) => {
+const globalErrorController = ( err, req, res, _next ) =>
+{
+	console.log(err)
 	if (err.name === 'ValidationError') {
 		// eslint-disable-next-line no-param-reassign
 		err.statusCode = 422;
