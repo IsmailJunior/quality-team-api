@@ -32,7 +32,7 @@ eventSchema.virtual('photo').get(function () {
 		return this.hypermedia.url;
 	}
 	return undefined;
-} );
+});
 
 eventSchema.pre(/^find/, function (next) {
 	this.select('-__v').populate({
