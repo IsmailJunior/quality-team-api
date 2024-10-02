@@ -11,8 +11,16 @@ export const createContentService = async (dto) => {
 	return { content };
 };
 
-export const findContentsByTierService = async (dto) => {
-	const contents = await Content.find({ subscription: dto.subscriptionId });
+export const findContentsByTierService = async (query, dto) => {
+	const features = new APIFeatures(
+		Content.find({ subscription: dto.subscriptionId }),
+		query,
+	)
+		.filter()
+		.sort()
+		.limit()
+		.paginate();
+	const contents = await features.query;
 	return {
 		contents,
 	};

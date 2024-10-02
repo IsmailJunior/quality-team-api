@@ -29,8 +29,8 @@ export const createContentController = async (req, res, _next) => {
 };
 
 export const getContentsController = async (req, res, _next) => {
-	const { params: subscriptionId } = req;
-	const { contents } = await findContentsByTierService(subscriptionId);
+	const { params: subscriptionId, query } = req;
+	const { contents } = await findContentsByTierService(query, subscriptionId);
 	res.status(200).json({
 		status: 'success',
 		results: contents.length,
