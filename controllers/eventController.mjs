@@ -1,5 +1,11 @@
-import { findDocsController } from './controllerFactory.mjs';
-import { findDocsService } from '../services/serviceFactory.mjs';
+import {
+	findDocsController,
+	deleteDocController,
+} from './controllerFactory.mjs';
+import {
+	findDocsService,
+	deleteDocService,
+} from '../services/serviceFactory.mjs';
 import createEventService from '../services/eventService.mjs';
 import Event from '../models/event.mjs';
 import AppError from '../utils/appError.mjs';
@@ -21,3 +27,7 @@ export const createEventController = async (req, res, next) => {
 };
 
 export const getEventsController = findDocsController(findDocsService(Event));
+
+export const deleteEventController = deleteDocController(
+	deleteDocService(Event),
+);
