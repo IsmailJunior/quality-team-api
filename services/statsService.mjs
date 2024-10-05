@@ -4,7 +4,7 @@ import Content from '../models/content.mjs';
 
 const getStatsService = async (dto) => {
 	const uid = new ObjectId(dto.subscriptionId);
-	const totalContent = await Content.aggregate([
+	let totalContent = await Content.aggregate([
 		{
 			$match: { subscription: uid },
 		},
@@ -15,7 +15,10 @@ const getStatsService = async (dto) => {
 			},
 		},
 	]);
-	const approvedContent = await Content.aggregate([
+	if (totalContent.length === 0) {
+		totalContent = 0;
+	}
+	let approvedContent = await Content.aggregate([
 		{
 			$match: { subscription: uid },
 		},
@@ -29,7 +32,10 @@ const getStatsService = async (dto) => {
 			},
 		},
 	]);
-	const idleContent = await Content.aggregate([
+	if (approvedContent.length === 0) {
+		approvedContent = 0;
+	}
+	let idleContent = await Content.aggregate([
 		{
 			$match: { subscription: uid },
 		},
@@ -43,7 +49,11 @@ const getStatsService = async (dto) => {
 			},
 		},
 	]);
-	const rejectedContent = await Content.aggregate([
+
+	if (idleContent.length === 0) {
+		idleContent.length = 0;
+	}
+	let rejectedContent = await Content.aggregate([
 		{
 			$match: { subscription: uid },
 		},
@@ -57,6 +67,9 @@ const getStatsService = async (dto) => {
 			},
 		},
 	]);
+	if (rejectedContent.length === 0) {
+		rejectedContent = 0;
+	}
 	return {
 		totalContent,
 		approvedContent,
