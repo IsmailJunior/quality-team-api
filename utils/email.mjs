@@ -1,22 +1,47 @@
 import nodemailer from 'nodemailer';
+import nodemailerSendgrid from 'nodemailer-sendgrid';
 
-const sendEmail = async (options) => {
-	const transporter = nodemailer.createTransport({
-		host: process.env.EMAIL_HOST,
-		port: process.env.EMAIL_PORT,
-		auth: {
-			user: process.env.EMAIL_USERNAME,
-			pass: process.env.EMAIL_PASSWORD,
-		},
-	});
-	const mailOpts = {
-		from: 'Ismail Salah <ismail.merced3@gmail.com>',
-		to: options.email,
-		subject: options.subject,
-		text: options.message,
-	};
+class Email {
+	constructor(user, url, message) {
+		this.to = user.username;
+		this.from = `Ismail Salah <${process.env.EMAIL_FROM}>`;
+		this.firstName = user.firstName.split(' ')[0];
+		this.message = message;
+		this.url = url;
+	}
 
-	await transporter.sendMail(mailOpts);
-};
+	createTransport() {
+		// sendGrid
+		return nodemailer.createTransport(
+			nodemailerSendgrid({
+				apiKey: process.env.SENDGRID_PASSWORD,
+			}),
+		);
+		// }
+		// return nodemailer.createTransport({
+		// 	host: process.env.EMAIL_HOST,
+		// 	port: process.env.EMAIL_PORT,
+		// 	auth: {
+		// 		user: process.env.EMAIL_USERNAME,
+		// 		pass: process.env.EMAIL_PASSWORD,
+		// 	},
+		// });
+	}
 
-export default sendEmail;
+	async send(subject, message) {
+		const mailOpts = {
+			from: this.from,
+			to: this.to,
+			subject: subject,
+			text: message,
+		};
+
+		await this.createTransport().sendMail(mailOpts);
+	}
+
+	async sendResetPassword() {
+		await this.send('Password Reset', this.message);
+	}
+}
+
+export default Email;

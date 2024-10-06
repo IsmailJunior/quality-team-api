@@ -6,7 +6,7 @@ import {
 	findUserByPasswordTokenService,
 	findUserWithPasswordByIdService,
 } from '../services/userService.mjs';
-import sendEmail from '../utils/email.mjs';
+import Email from '../utils/email.mjs';
 import AppError from '../utils/appError.mjs';
 
 const signToken = (id) =>
@@ -46,6 +46,8 @@ export const signupController = async (req, res, _next) => {
 		passwordConfirm,
 		passwordChangedAt,
 	});
+	// const url = 0;
+	// await new Email(user, url).send('Welcome');
 	createSendToken(user, 201, res);
 };
 
@@ -71,11 +73,7 @@ export const forgotPasswordController = async (req, res, next) => {
 	const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${resetToken}`;
 	const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forgot your password, Please ignore this email!`;
 	try {
-		await sendEmail({
-			email: user.username,
-			subject: 'Your password reset token (valid for 10 min)',
-			message,
-		});
+		await new Email(user, resetURL, message).sendResetPassword();
 		res.status(204).json({
 			status: 'success',
 			message: 'Token sent to email!',
