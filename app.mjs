@@ -19,7 +19,6 @@ import authRouter from './routes/authRoutes.mjs';
 import userRouter from './routes/userRoutes.mjs';
 import planRouter from './routes/planRouter.mjs';
 import subscriptionRouter from './routes/subscriptionRoutes.mjs';
-import perkRouter from './routes/perkRoutes.mjs';
 import requestRouter from './routes/requestRoutes.mjs';
 import eventRouter from './routes/eventRoutes.mjs';
 
@@ -56,7 +55,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/plans', planRouter);
 app.use('/api/v1/subscriptions', subscriptionRouter);
-app.use('/api/v1/perks', perkRouter);
 app.use('/api/v1/contents', contentRouter);
 app.use('/api/v1/requests', requestRouter);
 app.use('/api/v1/events', eventRouter);

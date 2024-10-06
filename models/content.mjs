@@ -25,8 +25,13 @@ const contentSchema = new Schema(
 					'Type is either Graphic Design, Motion Graphic, Copy Writing, TVC, or Marketing.',
 			},
 		},
-		description: String,
+		description: {
+			type: String,
+			minLength: [3, 'Description must be more then 3 characters.'],
+			maxLength: [300, 'Description must be less or equal 300 characters.'],
+		},
 		details: String,
+		link: String,
 		status: {
 			type: String,
 			enum: {
