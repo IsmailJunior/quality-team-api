@@ -4,12 +4,13 @@ import nodemailerSendgrid from 'nodemailer-sendgrid';
 class Email {
 	constructor(user, url, message) {
 		this.to = user.username;
-		this.from = `Ismail Salah <${process.env.EMAIL_FROM}>`;
+		this.from = `QualityTeam <${process.env.EMAIL_FROM}>`;
 		this.firstName = user.firstName.split(' ')[0];
 		this.message = message;
 		this.url = url;
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	createTransport() {
 		// sendGrid
 		return nodemailer.createTransport(
@@ -17,15 +18,6 @@ class Email {
 				apiKey: process.env.SENDGRID_PASSWORD,
 			}),
 		);
-		// }
-		// return nodemailer.createTransport({
-		// 	host: process.env.EMAIL_HOST,
-		// 	port: process.env.EMAIL_PORT,
-		// 	auth: {
-		// 		user: process.env.EMAIL_USERNAME,
-		// 		pass: process.env.EMAIL_PASSWORD,
-		// 	},
-		// });
 	}
 
 	async send(subject, message) {

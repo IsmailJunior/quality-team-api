@@ -69,7 +69,7 @@ contentSchema.virtual('updatedAtLocale').get(function () {
 
 contentSchema.virtual('photo').get(function () {
 	if (this.hypermedia && this.hypermedia.url) {
-		return this.hypermedia.url;
+		return this.hypermedia.url.replace('/upload', '/upload/w_500,h_280');
 	}
 	return undefined;
 });
