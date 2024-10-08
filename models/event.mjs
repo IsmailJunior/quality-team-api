@@ -29,7 +29,7 @@ const eventSchema = new Schema(
 
 eventSchema.virtual('photo').get(function () {
 	if (this.hypermedia && this.hypermedia.url) {
-		return this.hypermedia.url;
+		return this.hypermedia.url.replace('/upload', '/upload/w_400,h_550');
 	}
 	return undefined;
 });
