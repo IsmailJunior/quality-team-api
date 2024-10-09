@@ -1,7 +1,9 @@
 import multer from 'multer';
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
-import { storage } from '../config/cloudinary.mjs';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import sharp from 'sharp';
+import cloudinary from '../config/cloudinary.mjs';
 import AppError from '../utils/appError.mjs';
 import { findUserByIdService } from '../services/userService.mjs';
 
@@ -12,10 +14,39 @@ const multerFilter = (_req, file, cb) => {
 		cb(new AppError('Not an image! Please upload only images.', 400), false);
 	}
 };
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage, fileFilter: multerFilter });
-
 export const uploadPhotoMiddleware = upload.single('photo');
+
+export const uploadToCloudinaryMiddleware = async (req, _res, next) => {
+	if (!req.file) return next();
+	const resizedBuffer = await sharp(req.file.buffer)
+		.resize(500, 500)
+		.toFormat('jpeg')
+		.jpeg({ quality: 90 })
+		.toBuffer();
+	const uploadStream = cloudinary.uploader.upload_stream(
+		{
+			resource_type: 'image',
+			folder: 'public',
+			allowed_formats: ['jpeg', 'png', 'jpg', 'webp'],
+		},
+		(err, result) => {
+			if (err) {
+				console.error('Cloudinary upload error:', err);
+				return next(err);
+			}
+			if (!result) {
+				console.error('Cloudinary upload error: Result is undefined');
+				return next(new Error('Cloudinary upload result is undefined'));
+			}
+			req.file.path = result.secure_url;
+			req.file.filename = result.public_id;
+			next();
+		},
+	);
+	uploadStream.end(resizedBuffer);
+};
 
 export const restrictRouteMiddleware =
 	(...roles) =>

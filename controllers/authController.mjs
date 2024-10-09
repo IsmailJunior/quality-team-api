@@ -6,6 +6,7 @@ import {
 	findUserByPasswordTokenService,
 	findUserWithPasswordByIdService,
 } from '../services/userService.mjs';
+// eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import Email from '../utils/email.mjs';
 import AppError from '../utils/appError.mjs';
 
@@ -46,8 +47,8 @@ export const signupController = async (req, res, _next) => {
 		passwordConfirm,
 		passwordChangedAt,
 	});
-	// const url = 0;
-	// await new Email(user, url).send('Welcome');
+	const url = 0;
+	await new Email(user, url).sendWelcome();
 	createSendToken(user, 201, res);
 };
 

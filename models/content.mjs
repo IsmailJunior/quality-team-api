@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import slugify from 'slugify';
 import moment from 'moment';
-import { cloudinary } from '../config/cloudinary.mjs';
+import cloudinary from '../config/cloudinary.mjs';
 
 const contentSchema = new Schema(
 	{

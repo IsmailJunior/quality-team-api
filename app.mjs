@@ -14,7 +14,6 @@ import AppError from './utils/appError.mjs';
 import globalErrorController from './controllers/errorController.mjs';
 
 import contentRouter from './routes/contentRoutes.mjs';
-import tourRouter from './routes/tourRoutes.mjs';
 import authRouter from './routes/authRoutes.mjs';
 import userRouter from './routes/userRoutes.mjs';
 import planRouter from './routes/planRouter.mjs';
@@ -38,6 +37,7 @@ const limiter = rateLimit({
 // app.use(limiter);
 
 // Middlewares
+app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors());
@@ -50,7 +50,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Routes
-app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/plans', planRouter);

@@ -1,12 +1,19 @@
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid from 'nodemailer-sendgrid';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ejs from 'ejs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname( __filename );
+console.log(path.join(__dirname, `../views/password-reset.ejs`))
 
 class Email {
-	constructor(user, url, message) {
+	constructor(user, url) {
 		this.to = user.username;
 		this.from = `QualityTeam <${process.env.EMAIL_FROM}>`;
 		this.firstName = user.firstName.split(' ')[0];
-		this.message = message;
 		this.url = url;
 	}
 
@@ -20,19 +27,30 @@ class Email {
 		);
 	}
 
-	async send(subject, message) {
+	async send(template, subject) {
+		// eslint-disable-next-line no-undef
+		const html = await ejs.renderFile(path.join(__dirname, `../views/${template}.ejs`), {
+			firstName: this.firstName,
+			url: this.url,
+			subject,
+		} );
 		const mailOpts = {
 			from: this.from,
 			to: this.to,
-			subject: subject,
-			text: message,
+			subject,
+			html,
 		};
 
 		await this.createTransport().sendMail(mailOpts);
 	}
 
+	async sendWelcome ()
+	{
+		await this.send('welcome', 'Welcome aboard!')
+	}
+
 	async sendResetPassword() {
-		await this.send('Password Reset', this.message);
+		await this.send('reset-password', 'Reset Password!');
 	}
 }
 

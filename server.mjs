@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 import chalk from 'chalk';
 import app from './app.mjs';
 
-process.on('uncaughtException', (err) => {
-	console.log(chalk.bgRed(err.name, err.message));
-	console.log('UNCAUGHT EXCEPTION!, Shutting down...');
-	process.exit(1);
-});
+// process.on('uncaughtException', (err) => {
+// 	console.log(chalk.bgRed(err.name, err.message));
+// 	console.log('UNCAUGHT EXCEPTION!, Shutting down...');
+// 	process.exit(1);
+// });
 
 main().then(() => {
 	console.log(chalk.bgGreen('Connection to database successful.'));
@@ -22,10 +22,10 @@ const server = app.listen(port, () => {
 	console.log(chalk.bgYellow(`Connection success on port ${port}.`));
 });
 
-process.on('unhandledRejection', (err) => {
-	console.log(chalk.bgRed(err.name, err.message));
-	console.log('UNHANDELD REJECTION!, Shutting down...');
-	server.close(() => {
-		process.exit(1);
-	});
-});
+// process.on('unhandledRejection', (err) => {
+// 	console.log(chalk.bgRed(err.name, err.message));
+// 	console.log('UNHANDELD REJECTION!, Shutting down...');
+// 	server.close(() => {
+// 		process.exit(1);
+// 	});
+// });

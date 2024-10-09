@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { cloudinary } from '../config/cloudinary.mjs';
+import cloudinary from '../config/cloudinary.mjs';
 
 const eventSchema = new Schema(
 	{
