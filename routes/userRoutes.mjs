@@ -17,7 +17,7 @@ import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
 
-router.use(catchAsync(protectRoutetMiddleware));
+// router.use(catchAsync(protectRoutetMiddleware));
 
 router.route('/').get(catchAsync(getUsersController));
 router
