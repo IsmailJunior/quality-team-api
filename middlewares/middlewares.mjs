@@ -1,11 +1,11 @@
 import multer from 'multer';
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import sharp from 'sharp';
 import cloudinary from '../config/cloudinary.mjs';
 import AppError from '../utils/appError.mjs';
 import { findUserByIdService } from '../services/userService.mjs';
+import App from '../models/app.mjs';
 
 const multerFilter = (_req, file, cb) => {
 	if (file.mimetype.startsWith('image')) {
@@ -33,11 +33,9 @@ export const uploadToCloudinaryMiddleware = async (req, _res, next) => {
 		},
 		(err, result) => {
 			if (err) {
-				console.error('Cloudinary upload error:', err);
 				return next(err);
 			}
 			if (!result) {
-				console.error('Cloudinary upload error: Result is undefined');
 				return next(new Error('Cloudinary upload result is undefined'));
 			}
 			req.file.path = result.secure_url;
@@ -89,13 +87,6 @@ export const protectRoutetMiddleware = async (req, _res, next) => {
 	next();
 };
 
-export const aliasTopToursMiddleware = (req, _res, next) => {
-	req.query.limit = '5';
-	req.query.sort = '-ratingsAverage,price';
-	req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
-	next();
-};
-
 export const setSubscriptionIdToContentMiddleware = (req, _res, next) => {
 	if (!req.body.subscription) req.body.subscription = req.params.subscriptionId;
 	next();
@@ -118,8 +109,9 @@ export const setPhotoPathToBodyMiddleware = (req, _res, next) => {
 	next();
 };
 
-export const isUserSubsecribedMiddleware = (req, _res, next) => {
-	if (req.user.subscriptions.length === 0)
-		return next(new AppError('Please Subsecribe.', 401));
+export const authenticateKeyMiddleware = async (req, _res, next) => {
+	const apiKey = req.header('x-api-key');
+	const app = await App.findOne({ apiKey });
+	if (!app) return next(new AppError('You not allowed.', 403));
 	next();
 };

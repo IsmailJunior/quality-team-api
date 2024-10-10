@@ -10,13 +10,16 @@ import statsController from '../controllers/statsController.mjs';
 import {
 	protectRoutetMiddleware,
 	uploadPhotoMiddleware,
+	uploadToCloudinaryMiddleware,
 	setSubscriptionIdToContentMiddleware,
+	authenticateKeyMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router({ mergeParams: true });
 
-router.use(catchAsync(protectRoutetMiddleware));
+// router.use(catchAsync(protectRoutetMiddleware));
+// router.use(catchAsync(authenticateKeyMiddleware));
 
 router.route('/stats').get(catchAsync(statsController));
 
@@ -25,6 +28,7 @@ router
 	.get(catchAsync(getContentsController))
 	.post(
 		uploadPhotoMiddleware,
+		uploadToCloudinaryMiddleware,
 		setSubscriptionIdToContentMiddleware,
 		catchAsync(createContentController),
 	);

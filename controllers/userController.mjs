@@ -1,4 +1,8 @@
-import { updateMeService, deleteMeService } from '../services/userService.mjs';
+import {
+	updateMeService,
+	deleteMeService,
+	deleteUserService,
+} from '../services/userService.mjs';
 import {
 	deleteDocController,
 	findDocByIdController,
@@ -19,7 +23,14 @@ export const getUserByIdController = findDocByIdController(
 	findDocByIdService(User),
 );
 
-export const deleteUserController = deleteDocController(deleteDocService(User));
+export const deleteUserController = async (req, res, next) => {
+	const { user } = await deleteUserService(req.params.id);
+	if (!user) return next(new AppError('No user found with that ID.', 404));
+	res.status(200).json({
+		status: 'success',
+		data: null,
+	});
+};
 
 export const getMeController = findDocByIdController(findDocByIdService(User));
 export const updateMeController = async (req, res, next) => {

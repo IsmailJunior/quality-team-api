@@ -47,8 +47,8 @@ export const signupController = async (req, res, _next) => {
 		passwordConfirm,
 		passwordChangedAt,
 	});
-	const url = 0;
-	await new Email(user, url).sendWelcome();
+	// const url = 0;
+	// await new Email(user, url).sendWelcome();
 	createSendToken(user, 201, res);
 };
 

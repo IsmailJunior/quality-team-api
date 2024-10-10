@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import slugify from 'slugify';
 import moment from 'moment';
+import cloudinary from '../config/cloudinary.mjs';
+import Subscription from './subscription.mjs';
 import Hypermedia from './hypermedia.mjs';
 
 const userSchema = new Schema(
@@ -105,7 +107,43 @@ userSchema.virtual('memberSince').get(function () {
 	return moment(this.createdAt).fromNow();
 });
 
-userSchema.pre(/^find/, function (next) {
+userSchema.post('findOneAndDelete', async function (doc) {
+	if (doc) {
+		await Subscription.findOneAndDelete({ user: doc._id });
+	}
+});
+
+userSchema.pre('find', function (next) {
+	this.select('-__v')
+		.find({ active: { $ne: false } })
+		.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'subscriptions',
+			select: '-__v',
+		});
+	next();
+});
+
+userSchema.pre('findOne', function (next) {
+	this.select('-__v')
+		.find({ active: { $ne: false } })
+		.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'subscriptions',
+			select: '-__v',
+		});
+	next();
+});
+
+userSchema.pre('findOneAndUpdate', function (next) {
 	this.select('-__v')
 		.find({ active: { $ne: false } })
 		.select('-__v')

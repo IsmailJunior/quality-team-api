@@ -18,11 +18,6 @@ const subscriptionSchema = new Schema(
 			type: Date,
 			default: () => Date.now() + 30 * 24 * 60 * 60 * 1000,
 		},
-		plan: {
-			required: [true, 'A contract must have a plan.'],
-			type: Schema.ObjectId,
-			ref: 'Plan',
-		},
 		user: {
 			required: [true, 'A contract must have a user.'],
 			type: Schema.ObjectId,

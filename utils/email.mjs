@@ -46,11 +46,16 @@ class Email {
 
 	async sendWelcome ()
 	{
-		await this.send('welcome', 'Welcome aboard!')
+		await this.send('welcome', 'Welcome aboard.')
+	}
+
+	async confirmEmail ()
+	{
+		await this.send('confirm-email', 'Confirm Email.')
 	}
 
 	async sendResetPassword() {
-		await this.send('reset-password', 'Reset Password!');
+		await this.send('reset-password', 'Reset Password.');
 	}
 }
 

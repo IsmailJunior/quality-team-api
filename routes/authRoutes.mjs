@@ -9,10 +9,12 @@ import {
 import {
 	protectRoutetMiddleware,
 	uploadPhotoMiddleware,
+	authenticateKeyMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
+// router.use(catchAsync(authenticateKeyMiddleware));
 
 router
 	.route('/signup')
