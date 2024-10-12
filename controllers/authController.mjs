@@ -74,7 +74,7 @@ export const forgotPasswordController = async (req, res, next) => {
 	const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${resetToken}`;
 	const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forgot your password, Please ignore this email!`;
 	try {
-		await new Email(user, resetURL, message).sendResetPassword();
+		// await new Email(user, resetURL, message).sendResetPassword();
 		res.status(204).json({
 			status: 'success',
 			message: 'Token sent to email!',
@@ -92,11 +92,11 @@ export const forgotPasswordController = async (req, res, next) => {
 };
 
 export const resetPasswordController = async (req, res, next) => {
-	const hashedTokrn = crypto
+	const hashedToken = crypto
 		.createHash('sha256')
 		.update(req.params.token)
 		.digest('hex');
-	const { user } = await findUserByPasswordTokenService(hashedTokrn);
+	const { user } = await findUserByPasswordTokenService(hashedToken);
 	if (!user) return next(new AppError('Token is invalid or has expired', 400));
 	user.password = req.body.password;
 	user.passwordConfirm = req.body.passwordConfirm;

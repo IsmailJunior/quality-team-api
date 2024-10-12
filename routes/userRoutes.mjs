@@ -6,6 +6,8 @@ import {
 	getMeController,
 	updateMeController,
 	deleteMeController,
+	confirmEmailController,
+	verifyEmailController,
 } from '../controllers/userController.mjs';
 import {
 	protectRoutetMiddleware,
@@ -17,6 +19,7 @@ import {
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
+
 // router.use(catchAsync(authenticateKeyMiddleware));
 
 router.use(catchAsync(protectRoutetMiddleware));
@@ -35,5 +38,8 @@ router
 	.route('/:id')
 	.get(catchAsync(getUserByIdController))
 	.delete(catchAsync(deleteUserController));
+
+router.route('/verify/:id/:token').get(catchAsync(verifyEmailController));
+router.route('/verify/:id').post(catchAsync(confirmEmailController));
 
 export default router;

@@ -35,6 +35,16 @@ export const findUserByUsernameService = async (dto) => {
 	};
 };
 
+export const findUserByEmailTokenService = async (dto) => {
+	const user = await User.findOne({
+		confirmationToken: dto,
+		confirmationTokenExires: { $gt: Date.now() },
+	});
+	return {
+		user,
+	};
+};
+
 export const findUserByPasswordTokenService = async (dto) => {
 	const user = await User.findOne({
 		passwordResetToken: dto,

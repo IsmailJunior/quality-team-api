@@ -1,7 +1,11 @@
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+
 import {
 	updateMeService,
 	deleteMeService,
 	deleteUserService,
+	findUserByEmailTokenService,
 } from '../services/userService.mjs';
 import {
 	deleteDocController,
@@ -16,6 +20,22 @@ import {
 import User from '../models/user.mjs';
 import filterObject from '../utils/filterObject.mjs';
 import AppError from '../utils/appError.mjs';
+
+const signToken = (id) =>
+	jwt.sign({ id }, process.env.JWT_SECRET, {
+		expiresIn: process.env.JWT_EXPIRES_IN,
+	});
+
+const createSendToken = (user, statusCode, res) => {
+	const token = signToken(user._id);
+	res.status(statusCode).json({
+		status: 'success',
+		token,
+		data: {
+			user,
+		},
+	});
+};
 
 export const getUsersController = findDocsController(findDocsService(User));
 
@@ -70,4 +90,42 @@ export const deleteMeController = async (req, res, _next) => {
 		status: 'success',
 		data: null,
 	});
+};
+
+export const confirmEmailController = async (req, res, next) => {
+	const { id } = req.params;
+	const user = await User.findById(id);
+	if (!user) return next(new AppError('There is no user with this id.', 404));
+	const confirmationToken = user.createEmailVerifyToken();
+	await user.save({ validateBeforeSave: false });
+	const confirmationURL = `${req.protocol}://${req.get('host')}/api/v1/users/verify/${id}/${confirmationToken}`;
+	try {
+		// await new Email(user, confirmationURL).send();
+		res.status(200).json({
+			status: 'success',
+			data: confirmationURL,
+		});
+	} catch (error) {
+		user.confirmationToken = undefined;
+		user.confirmationTokenExires = undefined;
+		await user.save({ validateBeforeSave: false });
+		return next(
+			new AppError('There was an error sending the email, Try again later!'),
+			500,
+		);
+	}
+};
+
+export const verifyEmailController = async (req, res, next) => {
+	const hashedToken = crypto
+		.createHash('sha256')
+		.update(req.params.token)
+		.digest('hex');
+	const { user } = await findUserByEmailTokenService(hashedToken);
+	if (!user) return next(new AppError('Token is invalid or has expired', 400));
+	user.confirmed = true;
+	user.confirmationToken = undefined;
+	user.confirmationTokenExires = undefined;
+	await user.save({ validateBeforeSave: false });
+	createSendToken(user, 200, res);
 };

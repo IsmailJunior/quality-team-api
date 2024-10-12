@@ -65,6 +65,7 @@ const userSchema = new Schema(
 			},
 		},
 		confirmationToken: String,
+		confirmationTokenExires: Date,
 		passwordChangedAt: Date,
 		passwordResetToken: String,
 		passwordResetExpires: Date,
@@ -210,6 +211,17 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 	}
 
 	return false;
+};
+
+userSchema.methods.createEmailVerifyToken = function () {
+	const verifyToken = crypto.randomBytes(32).toString('hex');
+	this.confirmationToken = crypto
+		.createHash('sha256')
+		.update(verifyToken)
+		.digest('hex');
+
+	this.confirmationTokenExires = Date.now() + 10 * 60 * 1000;
+	return verifyToken;
 };
 
 userSchema.methods.createPasswordResetToken = function () {
