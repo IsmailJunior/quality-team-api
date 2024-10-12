@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import slugify from 'slugify';
 import moment from 'moment';
+import Bundle from './bundle.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
 const contentSchema = new Schema(
@@ -30,7 +31,6 @@ const contentSchema = new Schema(
 			minLength: [3, 'Description must be more then 3 characters.'],
 			maxLength: [300, 'Description must be less or equal 300 characters.'],
 		},
-		details: String,
 		link: String,
 		status: {
 			type: String,
@@ -45,10 +45,10 @@ const contentSchema = new Schema(
 			type: Schema.ObjectId,
 			ref: 'Hypermedia',
 		},
-		subscription: {
-			required: [true, 'A content must belong to a subscription.'],
+		bundle: {
+			required: [true, 'A content must belong to a bundle.'],
 			type: Schema.ObjectId,
-			ref: 'Subscription',
+			ref: 'Bundle',
 		},
 	},
 	{
@@ -82,8 +82,12 @@ contentSchema.pre(/^find/, function (next) {
 	next();
 });
 
-contentSchema.pre('save', function (next) {
+contentSchema.pre('save', async function (next) {
 	this.slug = slugify(this.name, { lower: true });
+	const bundle = await Bundle.findById(this.bundle);
+	await Bundle.findByIdAndUpdate(this.bundle, {
+		elements: bundle.elements - 1,
+	});
 	next();
 });
 

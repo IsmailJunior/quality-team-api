@@ -87,12 +87,12 @@ export const protectRoutetMiddleware = async (req, _res, next) => {
 	next();
 };
 
-export const setSubscriptionIdToContentMiddleware = (req, _res, next) => {
-	if (!req.body.subscription) req.body.subscription = req.params.subscriptionId;
+export const setBundleIdToContentMiddleware = (req, _res, next) => {
+	if (!req.body.bundle) req.body.bundle = req.params.bundleId;
 	next();
 };
 
-export const setUserIdToSubscriptionMiddleware = (req, _res, next) => {
+export const setUserIdToBundleMiddleware = (req, _res, next) => {
 	if (!req.body.user) req.body.user = req.user._id;
 	next();
 };

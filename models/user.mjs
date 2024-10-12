@@ -4,8 +4,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import slugify from 'slugify';
 import moment from 'moment';
-import cloudinary from '../config/cloudinary.mjs';
-import Subscription from './subscription.mjs';
+import Bundle from './bundle.mjs';
 import Hypermedia from './hypermedia.mjs';
 
 const userSchema = new Schema(
@@ -82,8 +81,8 @@ userSchema.virtual('profile').get(function () {
 	return undefined;
 });
 
-userSchema.virtual('subscriptions', {
-	ref: 'Subscription',
+userSchema.virtual('bundles', {
+	ref: 'Bundle',
 	foreignField: 'user',
 	localField: '_id',
 });
@@ -109,7 +108,7 @@ userSchema.virtual('memberSince').get(function () {
 
 userSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
-		await Subscription.findOneAndDelete({ user: doc._id });
+		await Bundle.findOneAndDelete({ user: doc._id });
 	}
 });
 
@@ -122,7 +121,7 @@ userSchema.pre('find', function (next) {
 			select: '-__v',
 		})
 		.populate({
-			path: 'subscriptions',
+			path: 'bundles',
 			select: '-__v',
 		});
 	next();
@@ -137,7 +136,7 @@ userSchema.pre('findOne', function (next) {
 			select: '-__v',
 		})
 		.populate({
-			path: 'subscriptions',
+			path: 'bundles',
 			select: '-__v',
 		});
 	next();
@@ -152,7 +151,7 @@ userSchema.pre('findOneAndUpdate', function (next) {
 			select: '-__v',
 		})
 		.populate({
-			path: 'subscriptions',
+			path: 'bundles',
 			select: '-__v',
 		});
 	next();

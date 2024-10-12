@@ -14,13 +14,6 @@ const requestSchema = new Schema(
 		toObject: { virtuals: true },
 	},
 );
-requestSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({
-		path: 'plan',
-		select: '-__v',
-	});
-	next();
-});
 
 const Request = model('Request', requestSchema);
 

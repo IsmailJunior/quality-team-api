@@ -11,7 +11,7 @@ import {
 	protectRoutetMiddleware,
 	uploadPhotoMiddleware,
 	uploadToCloudinaryMiddleware,
-	setSubscriptionIdToContentMiddleware,
+	setBundleIdToContentMiddleware,
 	authenticateKeyMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
@@ -29,7 +29,7 @@ router
 	.post(
 		uploadPhotoMiddleware,
 		uploadToCloudinaryMiddleware,
-		setSubscriptionIdToContentMiddleware,
+		setBundleIdToContentMiddleware,
 		catchAsync(createContentController),
 	);
 
