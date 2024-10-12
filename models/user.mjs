@@ -108,7 +108,12 @@ userSchema.virtual('memberSince').get(function () {
 
 userSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
-		await Bundle.findOneAndDelete({ user: doc._id });
+		const bundles = await Bundle.find({ user: doc._id });
+		await Promise.all(
+			Array.from(bundles).map(
+				async () => await Bundle.findOneAndDelete({ user: doc._id }),
+			),
+		);
 	}
 });
 

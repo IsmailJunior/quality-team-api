@@ -7,13 +7,18 @@ export const createContentService = async (dto) => {
 		url: dto.photo,
 		filename: dto.filename,
 	});
+	if (await Content.isBundleElementsReachedMaximum(dto.bundle)) {
+		return {
+			undefined,
+		};
+	}
 	const content = await Content.create({ ...dto, hypermedia });
 	return { content };
 };
 
 export const findContentsByTierService = async (query, dto) => {
 	const features = new APIFeatures(
-		Content.find({ subscription: dto.subscriptionId }),
+		Content.find({ bundle: dto.bundleId }),
 		query,
 	)
 		.filter()

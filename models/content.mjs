@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import slugify from 'slugify';
 import moment from 'moment';
+// eslint-disable-next-line import/no-cycle
 import Bundle from './bundle.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
@@ -87,6 +88,7 @@ contentSchema.pre('save', async function (next) {
 	const bundle = await Bundle.findById(this.bundle);
 	await Bundle.findByIdAndUpdate(this.bundle, {
 		elements: bundle.elements - 1,
+		elementsUsed: bundle.elementsUsed + 1,
 	});
 	next();
 });
@@ -96,6 +98,14 @@ contentSchema.post('findOneAndDelete', async function (doc) {
 		await cloudinary.uploader.destroy(doc.hypermedia.filename);
 	}
 });
+
+contentSchema.static(
+	'isBundleElementsReachedMaximum',
+	async function (bundleId) {
+		const bundle = await Bundle.findById(bundleId);
+		if (bundle.elements <= 0) return true;
+	},
+);
 
 const Content = model('Content', contentSchema);
 

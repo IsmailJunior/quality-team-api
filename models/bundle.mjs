@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+// eslint-disable-next-line import/no-cycle
 import Content from './content.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
@@ -19,6 +20,10 @@ const bundleSchema = new Schema(
 			type: Number,
 			default: 20,
 		},
+		elementsUsed: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{
 		timestamps: true,
@@ -29,7 +34,7 @@ const bundleSchema = new Schema(
 
 bundleSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
-		const contents = await Content.find({ subscription: doc._id });
+		const contents = await Content.find({ bundle: doc._id });
 		await Promise.all(
 			contents.map(
 				async (element) =>
@@ -38,14 +43,6 @@ bundleSchema.post('findOneAndDelete', async function (doc) {
 		);
 		await Content.deleteMany({ bundle: doc._id });
 	}
-} );
-
-bundleSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({
-		path: 'contents',
-		select: '-__v',
-	});
-	next();
 });
 
 bundleSchema.virtual('contents', {

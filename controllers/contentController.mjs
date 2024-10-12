@@ -12,14 +12,16 @@ import {
 	updateDocService,
 } from '../services/serviceFactory.mjs';
 import Content from '../models/content.mjs';
+import AppError from '../utils/appError.mjs';
 
-export const createContentController = async (req, res, _next) => {
+export const createContentController = async (req, res, next) => {
 	const { body } = req;
 	if (req.file) {
 		body.photo = req.file.path;
 		body.filename = req.file.filename;
 	}
 	const { content } = await createContentService(body);
+	if (!content) return next(new AppError('Reached maximum content.', 400));
 	res.status(201).json({
 		status: 'success',
 		data: {
