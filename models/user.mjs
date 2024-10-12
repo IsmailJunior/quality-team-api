@@ -44,6 +44,10 @@ const userSchema = new Schema(
 			default: true,
 			select: false,
 		},
+		confirmed: {
+			type: Boolean,
+			default: false,
+		},
 		password: {
 			type: String,
 			required: [true, 'Why no password, Ha?'],
@@ -60,6 +64,7 @@ const userSchema = new Schema(
 				message: 'Comfirmed password must be the same as password.',
 			},
 		},
+		confirmationToken: String,
 		passwordChangedAt: Date,
 		passwordResetToken: String,
 		passwordResetExpires: Date,

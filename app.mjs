@@ -18,7 +18,6 @@ import authRouter from './routes/authRoutes.mjs';
 import userRouter from './routes/userRoutes.mjs';
 import bundleRouter from './routes/bundleRoutes.mjs';
 import requestRouter from './routes/requestRoutes.mjs';
-import eventRouter from './routes/eventRoutes.mjs';
 import appRouter from './routes/appRoutes.mjs';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -55,7 +54,6 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/bundles', bundleRouter);
 app.use('/api/v1/contents', contentRouter);
 app.use('/api/v1/requests', requestRouter);
-app.use('/api/v1/events', eventRouter);
 app.use('/api/v1/app', appRouter);
 
 app.all('*', (req, _res, next) => {
