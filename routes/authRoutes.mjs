@@ -14,7 +14,7 @@ import {
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
-// router.use(catchAsync(authenticateKeyMiddleware));
+router.use(catchAsync(authenticateKeyMiddleware));
 
 router
 	.route('/signup')

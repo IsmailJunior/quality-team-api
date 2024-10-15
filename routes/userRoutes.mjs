@@ -15,12 +15,15 @@ import {
 	uploadPhotoMiddleware,
 	uploadToCloudinaryMiddleware,
 	authenticateKeyMiddleware,
+	restrictRouteMiddleware,
 } from '../middlewares/middlewares.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
 
-// router.use(catchAsync(authenticateKeyMiddleware));
+router.route('/verify/:id').post(catchAsync(confirmEmailController));
+
+router.use(catchAsync(authenticateKeyMiddleware));
 
 router.use(catchAsync(protectRoutetMiddleware));
 
@@ -34,12 +37,13 @@ router
 		catchAsync(updateMeController),
 	)
 	.delete(catchAsync(deleteMeController));
+
+router.route('/verify/:id/:token').get(catchAsync(verifyEmailController));
+
+router.use(catchAsync(restrictRouteMiddleware('admin')));
 router
 	.route('/:id')
 	.get(catchAsync(getUserByIdController))
 	.delete(catchAsync(deleteUserController));
-
-router.route('/verify/:id/:token').get(catchAsync(verifyEmailController));
-router.route('/verify/:id').post(catchAsync(confirmEmailController));
 
 export default router;
