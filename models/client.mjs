@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import cloudinary from '../config/cloudinary.mjs';
 
 const clientSchema = new Schema(
 	{
@@ -34,16 +35,17 @@ clientSchema.virtual('logo').get(function () {
 });
 
 clientSchema.pre(/^find/, function (next) {
-	this.select('-__v')
-		.populate({
-			path: 'hypermedia',
-			select: '-__v',
-		})
-		.populate({
-			path: 'user',
-			select: '-__v',
-		});
+	this.select('-__v').populate({
+		path: 'hypermedia',
+		select: '-__v',
+	});
 	next();
+});
+
+clientSchema.post('findOneAndDelete', async function (doc) {
+	if (doc) {
+		await cloudinary.uploader.destroy(doc.hypermedia.filename);
+	}
 });
 
 const Client = model('Client', clientSchema);

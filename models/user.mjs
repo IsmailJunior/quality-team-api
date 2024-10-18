@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import slugify from 'slugify';
 import moment from 'moment';
 import Bundle from './bundle.mjs';
+import Client from './client.mjs';
 import Hypermedia from './hypermedia.mjs';
 
 const userSchema = new Schema(
@@ -93,6 +94,12 @@ userSchema.virtual('bundles', {
 	localField: '_id',
 });
 
+userSchema.virtual('clients', {
+	ref: 'Client',
+	foreignField: 'user',
+	localField: '_id',
+});
+
 userSchema.virtual('createdAtLocale').get(function () {
 	moment.locale('ar-dz');
 	return moment(this.createdAt).format('MMMM Do YYYY, h:mm a');
@@ -103,8 +110,10 @@ userSchema.virtual('updatedAtLocale').get(function () {
 });
 
 userSchema.virtual('passwordChangedAtLocale').get(function () {
-	moment.locale('ar-dz');
-	return moment(this.passwordChangedAt).fromNow();
+	if (this.passwordChangedAt) {
+		moment.locale('ar-dz');
+		return moment(this.passwordChangedAt).fromNow();
+	}
 });
 
 userSchema.virtual('memberSince').get(function () {
@@ -115,9 +124,15 @@ userSchema.virtual('memberSince').get(function () {
 userSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
 		const bundles = await Bundle.find({ user: doc._id });
+		const clients = await Client.find({ user: doc._id });
 		await Promise.all(
 			Array.from(bundles).map(
 				async () => await Bundle.findOneAndDelete({ user: doc._id }),
+			),
+		);
+		await Promise.all(
+			Array.from(clients).map(
+				async () => await Client.findOneAndDelete({ user: doc._id }),
 			),
 		);
 	}
@@ -134,6 +149,10 @@ userSchema.pre('find', function (next) {
 		.populate({
 			path: 'bundles',
 			select: '-__v',
+		})
+		.populate({
+			path: 'clients',
+			select: '-__v',
 		});
 	next();
 });
@@ -149,7 +168,12 @@ userSchema.pre('findOne', function (next) {
 		.populate({
 			path: 'bundles',
 			select: '-__v',
+		})
+		.populate({
+			path: 'clients',
+			select: '-__v',
 		});
+
 	next();
 });
 
@@ -163,6 +187,10 @@ userSchema.pre('findOneAndUpdate', function (next) {
 		})
 		.populate({
 			path: 'bundles',
+			select: '-__v',
+		})
+		.populate({
+			path: 'clients',
 			select: '-__v',
 		});
 	next();
