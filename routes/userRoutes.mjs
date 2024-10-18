@@ -44,7 +44,7 @@ router
 	.post(getMeMiddleware, catchAsync(confirmEmailController));
 
 router.use(restrictRouteMiddleware('admin'));
-router.use('/:id/clients', clientRouter);
+router.use('/:userId/clients', clientRouter);
 router
 	.route('/:id')
 	.get(catchAsync(getUserByIdController))

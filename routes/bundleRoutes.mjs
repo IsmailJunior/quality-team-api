@@ -25,7 +25,7 @@ router.use(catchAsync(protectRoutetMiddleware));
 router.use('/:bundleId/contents', contentRouter);
 router.route('/stats').get(getMeMiddleware, catchAsync(statsController));
 
-router.use(catchAsync(restrictRouteMiddleware('admin')));
+router.use(restrictRouteMiddleware('admin'));
 
 router
 	.route('/')

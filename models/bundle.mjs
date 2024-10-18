@@ -8,7 +8,7 @@ const bundleSchema = new Schema(
 		cost: {
 			type: Number,
 			trim: true,
-			required: [true, 'A bundle must have a cost.'],
+			default: 100,
 		},
 		user: {
 			required: [true, 'A bundle must have a user.'],

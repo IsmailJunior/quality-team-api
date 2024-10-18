@@ -110,7 +110,7 @@ export const setPhotoPathToBodyMiddleware = (req, _res, next) => {
 };
 
 export const setUserIdToControllerMiddleware = (req, _res, next) => {
-	req.body.user = req.params.id;
+	req.body.user = req.params.userId;
 	next();
 };
 

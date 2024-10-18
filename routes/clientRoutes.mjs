@@ -3,7 +3,7 @@ import {
 	restrictRouteMiddleware,
 	protectRoutetMiddleware,
 	authenticateKeyMiddleware,
-	setUserIdToBundleMiddleware,
+	setUserIdToControllerMiddleware,
 	uploadPhotoMiddleware,
 	uploadToCloudinaryMiddleware,
 } from '../middlewares/middlewares.mjs';
@@ -28,14 +28,14 @@ router
 		restrictRouteMiddleware('admin'),
 		uploadPhotoMiddleware,
 		uploadToCloudinaryMiddleware,
-		setUserIdToBundleMiddleware,
+		setUserIdToControllerMiddleware,
 		catchAsync(createClientController),
 	);
 
 router
 	.route('/:id')
 	.get(catchAsync(findClientController))
-	.put(restrictRouteMiddleware('admin'), catchAsync(updateClientController))
+	.patch(restrictRouteMiddleware('admin'), catchAsync(updateClientController))
 	.delete(restrictRouteMiddleware('admin'), catchAsync(deleteClientController));
 
 export default router;

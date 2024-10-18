@@ -9,9 +9,9 @@ const clientSchema = new Schema(
 			ref: 'Hypermedia',
 		},
 		theme: [String],
-		outro: String,
 		intro: String,
 		plan: String,
+		description: String,
 		socialMediaLinks: [String],
 		user: {
 			required: [true, 'A client must have a user.'],
@@ -34,10 +34,15 @@ clientSchema.virtual('logo').get(function () {
 });
 
 clientSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({
-		path: 'hypermedia',
-		select: '-__v',
-	});
+	this.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'user',
+			select: '-__v',
+		});
 	next();
 });
 
