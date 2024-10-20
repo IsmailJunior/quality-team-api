@@ -8,18 +8,18 @@ import {
 	findUserByEmailTokenService,
 } from '../services/userService.mjs';
 import {
-	deleteDocController,
 	findDocByIdController,
 	findDocsController,
 } from './controllerFactory.mjs';
 import {
-	deleteDocService,
 	findDocByIdService,
 	findDocsService,
 } from '../services/serviceFactory.mjs';
 import User from '../models/user.mjs';
 import filterObject from '../utils/filterObject.mjs';
 import AppError from '../utils/appError.mjs';
+// eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
+import Email from '../utils/email.mjs';
 
 const signToken = (id) =>
 	jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -100,10 +100,13 @@ export const confirmEmailController = async (req, res, next) => {
 	await user.save({ validateBeforeSave: false });
 	const confirmationURL = `${req.protocol}://${req.get('host')}/api/v1/users/verify/${id}/${confirmationToken}`;
 	try {
-		// await new Email(user, confirmationURL).send();
+		await new Email(user, confirmationURL).send(
+			'confirmEmail',
+			'Confirm Email',
+		);
 		res.status(200).json({
 			status: 'success',
-			data: confirmationURL,
+			data: null,
 		});
 	} catch (error) {
 		user.confirmationToken = undefined;
@@ -127,5 +130,6 @@ export const verifyEmailController = async (req, res, next) => {
 	user.confirmationToken = undefined;
 	user.confirmationTokenExires = undefined;
 	await user.save({ validateBeforeSave: false });
+	await new Email(user, null).send('welcome', 'Welcome aboard');
 	createSendToken(user, 200, res);
 };

@@ -28,7 +28,7 @@ router
 	.route('/')
 	.get(catchAsync(getContentsController))
 	.post(
-		catchAsync(restrictRouteMiddleware('admin')),
+		restrictRouteMiddleware('admin'),
 		uploadPhotoMiddleware,
 		uploadToCloudinaryMiddleware,
 		setBundleIdToContentMiddleware,
