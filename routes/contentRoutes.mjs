@@ -35,7 +35,7 @@ router
 		catchAsync(createContentController),
 	);
 
-router.use(catchAsync(restrictRouteMiddleware('admin')));
+router.use(restrictRouteMiddleware('admin'));
 
 router
 	.route('/:id')
