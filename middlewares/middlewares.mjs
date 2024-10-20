@@ -8,11 +8,11 @@ import { findUserByIdService } from '../services/userService.mjs';
 import App from '../models/app.mjs';
 
 const multerFilter = (_req, file, cb) => {
-	if (file.mimetype.startsWith('image')) {
-		cb(null, true);
-	} else {
-		cb(new AppError('Not an image! Please upload only images.', 400), false);
-	}
+	// if (file.mimetype.startsWith('image')) {
+	cb(null, true);
+	// } else {
+	// 	cb(new AppError('Not an image! Please upload only images.', 400), false);
+	// }
 };
 const storage = multer.memoryStorage();
 const upload = multer({ storage, fileFilter: multerFilter });
