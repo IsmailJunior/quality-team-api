@@ -14,9 +14,9 @@ import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router();
 
-router.use(restrictRouteMiddleware('admin'));
-router.use(catchAsync(protectRoutetMiddleware));
 router.use(catchAsync(authenticateKeyMiddleware));
+router.use(catchAsync(protectRoutetMiddleware));
+router.use(restrictRouteMiddleware('admin'));
 
 router
 	.route('/')
