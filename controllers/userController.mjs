@@ -21,22 +21,6 @@ import AppError from '../utils/appError.mjs';
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import Email from '../utils/email.mjs';
 
-const signToken = (id) =>
-	jwt.sign({ id }, process.env.JWT_SECRET, {
-		expiresIn: process.env.JWT_EXPIRES_IN,
-	});
-
-const createSendToken = (user, statusCode, res) => {
-	const token = signToken(user._id);
-	res.status(statusCode).json({
-		status: 'success',
-		token,
-		data: {
-			user,
-		},
-	});
-};
-
 export const getUsersController = findDocsController(findDocsService(User));
 
 export const getUserByIdController = findDocByIdController(
@@ -131,5 +115,5 @@ export const verifyEmailController = async (req, res, next) => {
 	user.confirmationTokenExires = undefined;
 	await user.save({ validateBeforeSave: false });
 	await new Email(user, null).send('welcome', 'Welcome aboard');
-	createSendToken(user, 200, res);
+	res.redirect('https://qualityteamiq.com');
 };
