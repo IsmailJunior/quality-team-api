@@ -16,12 +16,13 @@ const router = Router();
 
 router.use(catchAsync(authenticateKeyMiddleware));
 router.use(catchAsync(protectRoutetMiddleware));
-router.use(restrictRouteMiddleware('admin'));
 
 router
 	.route('/')
-	.get(catchAsync(getRequestsController))
+	.get(restrictRouteMiddleware('admin'), catchAsync(getRequestsController))
 	.post(catchAsync(createRequestController));
+
+router.use(restrictRouteMiddleware('admin'));
 
 router
 	.route('/:id')
