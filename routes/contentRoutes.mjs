@@ -15,6 +15,7 @@ import {
 	authenticateKeyMiddleware,
 	restrictRouteMiddleware,
 } from '../middlewares/middlewares.mjs';
+import commentRouter from './commentRoutes.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 
 const router = Router({ mergeParams: true });
@@ -34,6 +35,7 @@ router
 		setBundleIdToContentMiddleware,
 		catchAsync(createContentController),
 	);
+router.use('/:contentId/comments', commentRouter);
 
 router.use(restrictRouteMiddleware('admin'));
 

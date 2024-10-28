@@ -3,6 +3,7 @@ import slugify from 'slugify';
 import moment from 'moment';
 // eslint-disable-next-line import/no-cycle
 import Bundle from './bundle.mjs';
+import Comment from './comment.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
 const contentSchema = new Schema(
@@ -17,18 +18,20 @@ const contentSchema = new Schema(
 			required: [true, 'A type must have a type.'],
 			enum: {
 				values: [
+					'website',
+					'mobile_app',
+					'marketing',
 					'graphic_design',
 					'motion_graphic',
-					'copy_writing',
+					'videograph',
 					'tvc',
-					'marketing',
-					'event',
-					'mobile_app',
-					'website',
 					'printing',
+					'voiceover',
+					'copy_writing',
+					'models',
 				],
 				message:
-					'Type is either Graphic Design, Motion Graphic, Copy Writing, TVC, or Marketing.',
+					'Type is either Graphic Design, Motion Graphic, Copy Writing, TVC, etc.',
 			},
 		},
 		description: {
@@ -79,14 +82,44 @@ contentSchema.virtual('photo').get(function () {
 	return undefined;
 });
 
-contentSchema.pre(/^find/, function (next) {
-	this.select('-__v').populate({
-		path: 'hypermedia',
-		select: '-__v',
-	});
+contentSchema.pre('find', function (next) {
+	this.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'comments',
+			select: '-__v',
+		});
 	next();
 });
 
+contentSchema.pre('findOne', function (next) {
+	this.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'comments',
+			select: '-__v',
+		});
+	next();
+});
+
+contentSchema.pre('findOneAndUpdate', function (next) {
+	this.select('-__v')
+		.populate({
+			path: 'hypermedia',
+			select: '-__v',
+		})
+		.populate({
+			path: 'comments',
+			select: '-__v',
+		});
+	next();
+});
 contentSchema.pre('save', async function (next) {
 	this.slug = slugify(this.name, { lower: true });
 	const bundle = await Bundle.findById(this.bundle);
@@ -98,8 +131,22 @@ contentSchema.pre('save', async function (next) {
 
 contentSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
+		const comments = await Comment.find({ content: doc._id });
+		await Promise.all(
+			comments.map(
+				async (element) =>
+					await cloudinary.uploader.destroy(element.hypermedia.filename),
+			),
+		);
+		await Comment.deleteMany({ content: doc._id });
 		await cloudinary.uploader.destroy(doc.hypermedia.filename);
 	}
+});
+
+contentSchema.virtual('comments', {
+	ref: 'Comment',
+	foreignField: 'content',
+	localField: '_id',
 });
 
 contentSchema.static(

@@ -120,3 +120,8 @@ export const authenticateKeyMiddleware = async (req, _res, next) => {
 	if (!app) return next(new AppError('You not allowed.', 403));
 	next();
 };
+
+export const setContentIdToCommentMiddleware = async (req, _res, next) => {
+	req.body.content = req.params.contentId;
+	next();
+};
