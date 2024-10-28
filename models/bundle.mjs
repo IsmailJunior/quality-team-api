@@ -32,6 +32,11 @@ const bundleSchema = new Schema(
 	},
 );
 
+bundleSchema.virtual('overview').get(function () {
+	if (this.elementsUsed === 0) return 0;
+	return Math.round((100 * this.elementsUsed) / this.elements);
+});
+
 bundleSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
 		const contents = await Content.find({ bundle: doc._id });

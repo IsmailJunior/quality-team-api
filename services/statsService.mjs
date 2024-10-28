@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-import
 import { ObjectId } from 'bson';
 import Bundle from '../models/bundle.mjs';
 import Content from '../models/content.mjs';

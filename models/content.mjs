@@ -22,6 +22,10 @@ const contentSchema = new Schema(
 					'copy_writing',
 					'tvc',
 					'marketing',
+					'event',
+					'mobile_app',
+					'website',
+					'printing',
 				],
 				message:
 					'Type is either Graphic Design, Motion Graphic, Copy Writing, TVC, or Marketing.',
@@ -33,7 +37,6 @@ const contentSchema = new Schema(
 			maxLength: [300, 'Description must be less or equal 300 characters.'],
 		},
 		link: String,
-		progress: Number,
 		status: {
 			type: String,
 			enum: {
@@ -88,7 +91,6 @@ contentSchema.pre('save', async function (next) {
 	this.slug = slugify(this.name, { lower: true });
 	const bundle = await Bundle.findById(this.bundle);
 	await Bundle.findByIdAndUpdate(this.bundle, {
-		elements: bundle.elements - 1,
 		elementsUsed: bundle.elementsUsed + 1,
 	});
 	next();
@@ -104,7 +106,7 @@ contentSchema.static(
 	'isBundleElementsReachedMaximum',
 	async function (bundleId) {
 		const bundle = await Bundle.findById(bundleId);
-		if (bundle.elements <= 0) return true;
+		if (bundle.elements === bundle.elementsUsed) return true;
 	},
 );
 
