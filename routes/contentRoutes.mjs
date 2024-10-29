@@ -37,12 +37,13 @@ router
 	);
 router.use('/:contentId/comments', commentRouter);
 
-router.use(restrictRouteMiddleware('admin'));
-
 router
 	.route('/:id')
 	.get(catchAsync(getContentController))
 	.patch(catchAsync(updateContentController))
-	.delete(catchAsync(deleteContentController));
+	.delete(
+		restrictRouteMiddleware('admin'),
+		catchAsync(deleteContentController),
+	);
 
 export default router;
