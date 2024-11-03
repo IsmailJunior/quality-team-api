@@ -7,6 +7,7 @@ import moment from 'moment';
 import Bundle from './bundle.mjs';
 import Client from './client.mjs';
 import Hypermedia from './hypermedia.mjs';
+import cloudinary from '../config/cloudinary.mjs';
 
 const userSchema = new Schema(
 	{
@@ -135,6 +136,10 @@ userSchema.post('findOneAndDelete', async function (doc) {
 				async () => await Client.findOneAndDelete({ user: doc._id }),
 			),
 		);
+		if (doc.hypermedia.filename) {
+			await cloudinary.uploader.destroy(doc.hypermedia.filename);
+		}
+		await Hypermedia.findByIdAndDelete(doc.hypermedia);
 	}
 });
 

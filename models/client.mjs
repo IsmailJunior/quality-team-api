@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import Hypermedia from './hypermedia.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
 const clientSchema = new Schema(
@@ -44,7 +45,10 @@ clientSchema.pre(/^find/, function (next) {
 
 clientSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
-		await cloudinary.uploader.destroy(doc.hypermedia.filename);
+		if (doc.hypermedia.filename) {
+			await cloudinary.uploader.destroy(doc.hypermedia.filename);
+		}
+		await Hypermedia.findByIdAndDelete(doc.hypermedia);
 	}
 });
 

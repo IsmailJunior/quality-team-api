@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 // eslint-disable-next-line import/no-cycle
 import Content from './content.mjs';
+import Hypermedia from './hypermedia.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
 const bundleSchema = new Schema(
@@ -20,10 +21,6 @@ const bundleSchema = new Schema(
 			type: Number,
 			default: 20,
 		},
-		elementsUsed: {
-			type: Number,
-			default: 0,
-		},
 	},
 	{
 		timestamps: true,
@@ -37,14 +34,23 @@ bundleSchema.virtual('overview').get(function () {
 	return Math.round((100 * this.elementsUsed) / this.elements);
 });
 
+bundleSchema.virtual('elementsUsed').get(function () {
+	if (this.contents) {
+		return this.contents.length;
+	}
+	return 0;
+});
+
 bundleSchema.post('findOneAndDelete', async function (doc) {
 	if (doc) {
 		const contents = await Content.find({ bundle: doc._id });
 		await Promise.all(
-			contents.map(
-				async (element) =>
-					await cloudinary.uploader.destroy(element.hypermedia.filename),
-			),
+			contents.map(async (element) => {
+				if (element.hypermedia.filename) {
+					await cloudinary.uploader.destroy(element.hypermedia.filename);
+				}
+				await Hypermedia.findByIdAndDelete(element.hypermedia);
+			}),
 		);
 		await Content.deleteMany({ bundle: doc._id });
 	}
@@ -54,6 +60,14 @@ bundleSchema.virtual('contents', {
 	ref: 'Content',
 	foreignField: 'bundle',
 	localField: '_id',
+});
+
+bundleSchema.pre(/^find/, function (next) {
+	this.select('-__v').populate({
+		path: 'contents',
+		select: '-__v',
+	});
+	next();
 });
 
 const Bundle = model('Bundle', bundleSchema);

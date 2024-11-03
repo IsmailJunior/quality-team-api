@@ -4,6 +4,7 @@ import moment from 'moment';
 // eslint-disable-next-line import/no-cycle
 import Bundle from './bundle.mjs';
 import Comment from './comment.mjs';
+import Hypermedia from './hypermedia.mjs';
 import cloudinary from '../config/cloudinary.mjs';
 
 const contentSchema = new Schema(
@@ -139,7 +140,10 @@ contentSchema.post('findOneAndDelete', async function (doc) {
 			),
 		);
 		await Comment.deleteMany({ content: doc._id });
-		await cloudinary.uploader.destroy(doc.hypermedia.filename);
+		if (doc.hypermedia.filename) {
+			await cloudinary.uploader.destroy(doc.hypermedia.filename);
+		}
+		await Hypermedia.findByIdAndDelete(doc.hypermedia);
 	}
 });
 
