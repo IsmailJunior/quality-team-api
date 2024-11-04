@@ -28,13 +28,13 @@ if (process.env.NODE_ENV !== 'production') {
 // Express Application
 const app = express();
 
-const limiter = rateLimit({
-	max: 500,
-	windowMs: 60 * 60 * 1000,
-	message: 'Too many requests from this IP, Please try again in an hour!',
-});
+// const limiter = rateLimit({
+// 	max: 500,
+// 	windowMs: 60 * 60 * 1000,
+// 	message: 'Too many requests from this IP, Please try again in an hour!',
+// });
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 
 // Middlewares
 app.set('view engine', 'ejs');
