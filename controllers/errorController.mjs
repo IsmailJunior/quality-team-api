@@ -20,6 +20,7 @@ const globalErrorController = (err, req, res, _next) => {
 	res.status(err.statusCode).json({
 		status: err.status,
 		errors: [err.errors],
+		errorCode: err.code,
 		timestamp: new Date(),
 		endpoint: req.path,
 		message: err.message,
