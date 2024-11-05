@@ -157,7 +157,7 @@ contentSchema.static(
 	'isBundleElementsReachedMaximum',
 	async function (bundleId) {
 		const bundle = await Bundle.findById(bundleId);
-		if (bundle.elements === bundle.elementsUsed) return true;
+		if (bundle.elements === bundle.contents.length) return true;
 	},
 );
 
