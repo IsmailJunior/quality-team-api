@@ -24,12 +24,10 @@ const contentSchema = new Schema(
 					'marketing',
 					'graphic_design',
 					'motion_graphic',
-					'videograph',
 					'tvc',
+					'reels',
 					'printing',
-					'voiceover',
 					'copy_writing',
-					'models',
 				],
 				message:
 					'Type is either Graphic Design, Motion Graphic, Copy Writing, TVC, etc.',
